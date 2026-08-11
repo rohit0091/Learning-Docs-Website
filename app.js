@@ -1,6 +1,6 @@
 /**
  * Technical Learning & Daily Work Documentation Application Logic
- * Prushal Technology Pvt. Ltd.
+ * Prushal Technology Pvt. Ltd. & Personal Development Journal
  */
 
 // State Management
@@ -8,7 +8,8 @@ const state = {
     currentYear: 2026,
     currentMonth: 7, // 0-indexed: 7 is August
     activeView: "calendar-view",
-    activeTopicId: "django-architecture",
+    activeTopicId: "aws-vs-azure-vs-gcp",
+    activeCategoryFilter: "all",
     theme: localStorage.getItem("prushal_docs_theme") || "light"
 };
 
@@ -108,7 +109,6 @@ function initCalendarControls() {
     const monthSelect = document.getElementById("monthSelect");
     const yearSelect = document.getElementById("yearSelect");
 
-    // Populate Month Dropdown
     if (monthSelect) {
         monthSelect.innerHTML = MONTH_NAMES.map((m, i) => `<option value="${i}">${m}</option>`).join("");
         monthSelect.value = state.currentMonth;
@@ -118,7 +118,6 @@ function initCalendarControls() {
         });
     }
 
-    // Populate Year Dropdown
     if (yearSelect) {
         const years = [2025, 2026, 2027];
         yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
@@ -181,12 +180,11 @@ function renderCalendar(year, month) {
 
     gridEl.innerHTML = "";
 
-    // Calculate days in month and starting day of week (Monday as day 0)
-    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 is Sunday
-    const startOffset = (firstDayIndex === 0 ? 6 : firstDayIndex - 1); // Shift Sunday to 6, Mon to 0
+    const firstDayIndex = new Date(year, month, 1).getDay();
+    const startOffset = (firstDayIndex === 0 ? 6 : firstDayIndex - 1);
     const totalDays = new Date(year, month + 1, 0).getDate();
 
-    // Render preceding empty padding cells
+    // Empty leading padding cells
     for (let i = 0; i < startOffset; i++) {
         const emptyCell = document.createElement("div");
         emptyCell.className = "cal-day-cell empty-day";
@@ -223,7 +221,10 @@ function renderCalendar(year, month) {
                 <div class="hover-preview-card">
                     <div class="preview-header">
                         <span class="preview-date">${journalEntry.dayOfWeek}, ${MONTH_NAMES[month]} ${day}</span>
-                        <span class="preview-badge">✓ Completed</span>
+                        <span class="preview-badge">✓ ${journalEntry.category}</span>
+                    </div>
+                    <div style="font-weight: 700; font-size: 0.76rem; color: var(--text-main); margin-bottom: 0.35rem;">
+                        ${journalEntry.title}
                     </div>
                     <ul class="preview-task-list">
                         ${journalEntry.tasks.slice(0, 4).map(t => `<li class="preview-task-item">✓ ${t.title}</li>`).join("")}
@@ -258,7 +259,7 @@ function openDailyReportModal(entry) {
     const modalOverlay = document.getElementById("dailyReportModal");
     if (!modalOverlay) return;
 
-    document.getElementById("modalDateBadge").textContent = `${entry.dayOfWeek} &bull; ${entry.date}`;
+    document.getElementById("modalDateBadge").innerHTML = `${entry.dayOfWeek} &bull; ${entry.date} &bull; <span style="color: var(--success);">${entry.category}</span>`;
     document.getElementById("modalTitle").textContent = entry.title;
     document.getElementById("modalSummaryText").textContent = entry.summary;
 
@@ -340,14 +341,33 @@ function renderKnowledgeSidebar() {
     const sidebarList = document.getElementById("topicNavList");
     if (!sidebarList) return;
 
-    sidebarList.innerHTML = Object.values(DOCS_DATA.topics).map(topic => `
-        <li>
-            <button class="topic-nav-btn ${topic.id === state.activeTopicId ? 'active' : ''}" data-topic-id="${topic.id}" onclick="selectTopic('${topic.id}')">
-                <span>${topic.title}</span>
-                <span style="font-size: 0.7rem; color: var(--text-light);">&rsaquo;</span>
-            </button>
-        </li>
-    `).join("");
+    // Group topics by category
+    const categories = {};
+    Object.values(DOCS_DATA.topics).forEach(t => {
+        if (!categories[t.category]) categories[t.category] = [];
+        categories[t.category].push(t);
+    });
+
+    let html = "";
+    Object.keys(categories).forEach(cat => {
+        html += `
+            <li class="nav-group-title" style="margin-top: 0.85rem; color: var(--primary); font-size: 0.72rem;">
+                ${cat}
+            </li>
+        `;
+        categories[cat].forEach(topic => {
+            html += `
+                <li>
+                    <button class="topic-nav-btn ${topic.id === state.activeTopicId ? 'active' : ''}" data-topic-id="${topic.id}" onclick="selectTopic('${topic.id}')">
+                        <span>${topic.title}</span>
+                        <span style="font-size: 0.7rem; color: var(--text-light);">&rsaquo;</span>
+                    </button>
+                </li>
+            `;
+        });
+    });
+
+    sidebarList.innerHTML = html;
 }
 
 function selectTopic(topicId) {
@@ -470,10 +490,9 @@ function renderProjectsList() {
     const container = document.getElementById("projectsListContainer");
     if (!container) return;
 
-    const project = DOCS_DATA.projects[0];
-    container.innerHTML = `
+    container.innerHTML = DOCS_DATA.projects.map(project => `
         <div class="project-hero-card">
-            <div class="project-tag-status">✓ ${project.status}</div>
+            <div class="project-tag-status">✓ ${project.status} &bull; ${project.category}</div>
             <h2 class="project-hero-title">${project.name}</h2>
             <p class="project-hero-desc">${project.description}</p>
             <div class="tech-badge-group" style="margin-bottom: 1.5rem;">
@@ -483,7 +502,7 @@ function renderProjectsList() {
             <div class="features-matrix-grid">
                 <div class="matrix-col">
                     <div class="matrix-title implemented">
-                        <span>&#10004;</span> Currently Implemented (Verified)
+                        <span>&#10004;</span> Currently Implemented & Researched
                     </div>
                     <ul class="matrix-list">
                         ${project.implementedFeatures.map(f => `<li><span style="color: var(--success);">&#10003;</span> ${f}</li>`).join("")}
@@ -500,7 +519,7 @@ function renderProjectsList() {
                 </div>
             </div>
         </div>
-    `;
+    `).join("");
 }
 
 // =============================================================================
@@ -570,7 +589,7 @@ function initSearch() {
         searchInput.addEventListener("input", (e) => {
             const query = e.target.value.trim().toLowerCase();
             if (!query) {
-                searchResults.innerHTML = `<p style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">Type keywords like 'SMTP', 'Serializer', 'Logo', 'Postman', 'Error'...</p>`;
+                searchResults.innerHTML = `<p style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">Type keywords like 'AWS', 'GCP', 'Azure', 'Kubernetes', 'SMTP', 'Serializer'...</p>`;
                 return;
             }
 
@@ -578,9 +597,9 @@ function initSearch() {
 
             // Search Topics
             Object.values(DOCS_DATA.topics).forEach(topic => {
-                if (topic.title.toLowerCase().includes(query) || topic.summary.toLowerCase().includes(query)) {
+                if (topic.title.toLowerCase().includes(query) || topic.summary.toLowerCase().includes(query) || topic.tags.some(t => t.toLowerCase().includes(query))) {
                     results.push({
-                        type: "Knowledge Topic",
+                        type: `Knowledge (${topic.category})`,
                         title: topic.title,
                         snippet: topic.summary,
                         action: () => {
@@ -593,7 +612,7 @@ function initSearch() {
 
             // Search Journal Days
             DOCS_DATA.journal.forEach(j => {
-                if (j.title.toLowerCase().includes(query) || j.summary.toLowerCase().includes(query) || j.date.includes(query)) {
+                if (j.title.toLowerCase().includes(query) || j.summary.toLowerCase().includes(query) || j.date.includes(query) || j.category.toLowerCase().includes(query)) {
                     results.push({
                         type: `Daily Log (${j.date})`,
                         title: j.title,

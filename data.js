@@ -1,6 +1,6 @@
 /**
  * Technical Learning & Daily Work Documentation Data Model
- * Prushal Technology Pvt. Ltd. Contact API + Knowledge Base
+ * Prushal Technology Pvt. Ltd. & Personal Technical Learning Journal
  */
 
 const DOCS_DATA = {
@@ -9,7 +9,7 @@ const DOCS_DATA = {
         website: "https://www.prushal.com/",
         author: "Rohit",
         startDate: "2026-08-10",
-        version: "1.2.0",
+        version: "2.0.0",
         lastUpdated: "2026-08-11"
     },
 
@@ -20,22 +20,26 @@ const DOCS_DATA = {
         {
             date: "2026-08-10",
             dayOfWeek: "Monday",
-            title: "Django 6.1 Contact API + SQLite Foundation",
+            title: "Task 1: Django 6.1 Contact API + Professional SMTP Email System",
+            category: "Backend & Web API",
             project: "prushal-contact-api",
             status: "completed",
-            summary: "Initialized the Django 6.1 project, created the 'contact' application, configured ContactMessage model, built ModelSerializer, implemented GET and POST API views using DRF, routed endpoints, and verified database persistence using Postman.",
-            technologies: ["Python 3.13", "Django 6.1", "Django REST Framework", "SQLite", "Postman"],
+            summary: "Architected and built the Django 6.1 + Django REST Framework contact-form API for Prushal Technology Pvt. Ltd. Configured ContactMessage model, DRF ModelSerializer, SQLite persistence, and a decoupled email service dispatching branded HTML emails with CID logo embedding and plain-text fallbacks.",
+            technologies: ["Python 3.13", "Django 6.1", "Django REST Framework", "SQLite", "SMTP / TLS (Port 587)", "EmailMultiAlternatives", "MIMEImage / CID", "Postman", "Dotenv"],
             tasks: [
-                { title: "Set up Python Virtual Environment (venv)", completed: true },
-                { title: "Install Django 6.1 & Django REST Framework", completed: true },
-                { title: "Create Django project ('config') and application ('contact')", completed: true },
+                { title: "Initialize Django 6.1 project ('config') and application ('contact')", completed: true },
                 { title: "Define ContactMessage model with name, email, contact_no, message", completed: true },
-                { title: "Create and apply SQLite database migrations", completed: true },
+                { title: "Generate and apply SQLite migrations (db.sqlite3)", completed: true },
                 { title: "Build ContactMessageSerializer with full field validation", completed: true },
                 { title: "Implement function-based API view (@api_view(['GET', 'POST']))", completed: true },
                 { title: "Configure project and app level URL routing (/api/messages/)", completed: true },
-                { title: "Test GET & POST endpoints via Postman (HTTP 201 & HTTP 400)", completed: true },
-                { title: "Verify SQLite data storage in db.sqlite3", completed: true }
+                { title: "Decouple email dispatch into contact/services/email_service.py", completed: true },
+                { title: "Design responsive customer acknowledgement HTML email template", completed: true },
+                { title: "Design internal admin notification HTML email template with mailto: action", completed: true },
+                { title: "Implement CID (Content-ID) inline embedding for prushal-logo.webp", completed: true },
+                { title: "Integrate EmailMultiAlternatives dual MIME structure with plain-text fallback", completed: true },
+                { title: "Implement try/except blocks and logger.exception for fault-tolerant persistence", completed: true },
+                { title: "Verify GET & POST endpoints in Postman (HTTP 201 & HTTP 400)", completed: true }
             ],
             topicsLearned: [
                 "django-architecture",
@@ -43,59 +47,6 @@ const DOCS_DATA = {
                 "django-models",
                 "drf-serializers",
                 "api-views",
-                "url-routing",
-                "sqlite-database",
-                "postman-testing"
-            ],
-            timeline: [
-                { time: "09:30", event: "Project initialization & environment configuration" },
-                { time: "11:00", event: "Model schema creation & migration to SQLite" },
-                { time: "12:30", event: "DRF Serializer implementation & validation logic" },
-                { time: "14:15", event: "API View implementation & URL routing" },
-                { time: "16:30", event: "Postman testing suite execution & persistence verification" }
-            ],
-            problems: [
-                {
-                    error: "RuntimeError: Model class messages.models.ContactMessage doesn't declare an explicit app_label",
-                    cause: "The Django application was registered improperly without matching the installed app configuration.",
-                    solution: "Added 'contact' cleanly to INSTALLED_APPS in settings.py."
-                },
-                {
-                    error: "Application labels aren't unique, duplicates: messages",
-                    cause: "Attempted to use the reserved/existing app label 'messages' which conflicted with django.contrib.messages.",
-                    solution: "Renamed the custom application to 'contact' avoiding namespace collision."
-                }
-            ],
-            whatILearned: [
-                "Django strictly enforces separation between the global project configuration ('config') and modular apps ('contact').",
-                "ModelSerializer automatically generates serializer fields based on model schema definitions and handles automatic validation.",
-                "Function-based views decorated with @api_view provide granular control while seamlessly integrating with DRF Response objects.",
-                "SQLite stores all records locally inside db.sqlite3, making it ideal for rapid development and testing."
-            ],
-            whyItMatters: "Building a reliable, RESTful API layer is the foundational first step. By adhering to REST conventions (GET for retrieval, POST for creation with HTTP 201), the backend provides a predictable contract for web frontends and third-party integrations.",
-            nextSteps: "Integrate SMTP email delivery so that both customer acknowledgements and internal admin notifications are dispatched automatically upon form submission."
-        },
-        {
-            date: "2026-08-11",
-            dayOfWeek: "Tuesday",
-            title: "Professional SMTP Emails, CID Logo & Service Refactor",
-            project: "prushal-contact-api",
-            status: "completed",
-            summary: "Engineered a dedicated email service layer (email_service.py) separate from views.py. Implemented corporate HTML email templates with CID logo embedding, EmailMultiAlternatives plain-text fallbacks, environment-based SMTP credentials, and resilient error handling.",
-            technologies: ["SMTP", "Gmail TLS (Port 587)", "EmailMultiAlternatives", "MIMEImage / CID", "HTML Email Design", "Python Logging", "Dotenv"],
-            tasks: [
-                { title: "Extract email logic into contact/services/email_service.py", completed: true },
-                { title: "Configure Django MAILERS setting using .env environment variables", completed: true },
-                { title: "Design responsive customer acknowledgement email template", completed: true },
-                { title: "Design internal admin notification email template with mailto: action", completed: true },
-                { title: "Implement CID (Content-ID) inline embedding for prushal-logo.webp", completed: true },
-                { title: "Integrate EmailMultiAlternatives with rich plain-text fallback", completed: true },
-                { title: "Implement try/except blocks and logger.exception for error resilience", completed: true },
-                { title: "Configure reply_to header on admin notifications", completed: true },
-                { title: "Verify database persistence independence during SMTP simulation", completed: true },
-                { title: "Build comprehensive technical documentation website portal", completed: true }
-            ],
-            topicsLearned: [
                 "service-layer-pattern",
                 "smtp-configuration",
                 "email-multi-alternatives",
@@ -106,45 +57,112 @@ const DOCS_DATA = {
                 "security-credential-management"
             ],
             timeline: [
-                { time: "09:00", event: "Architecting email service separation from views.py" },
-                { time: "10:45", event: "Designing table-based responsive HTML email templates" },
-                { time: "12:15", event: "Investigating broken logo from external Bing CDN and implementing local CID embedding" },
-                { time: "14:00", event: "Implementing EmailMultiAlternatives & dual MIME structure" },
-                { time: "15:30", event: "Integrating Python logging and database persistence isolation" },
-                { time: "17:00", event: "Complete documentation website creation & testing" }
+                { time: "09:30", event: "Project initialization & virtual environment setup" },
+                { time: "11:00", event: "ContactMessage model schema & SQLite database migrations" },
+                { time: "12:30", event: "DRF Serializer validation & API view implementation" },
+                { time: "14:15", event: "Email service decoupling & HTML template authoring" },
+                { time: "15:45", event: "Investigating broken Bing CDN logo and fixing via local CID embedding" },
+                { time: "17:00", event: "Postman testing suite execution & persistence isolation verification" }
             ],
             problems: [
                 {
-                    error: "NameError: name 'send_mail' is not defined in views.py",
-                    cause: "send_mail import was removed when refactoring, but a legacy call still lingered in the view.",
-                    solution: "Replaced direct email calls in views.py with the decoupled send_contact_emails(contact_message) service function."
+                    error: "RuntimeError: Model class messages.models.ContactMessage doesn't declare an explicit app_label",
+                    cause: "The Django application was registered improperly without matching installed app configuration.",
+                    solution: "Added 'contact' cleanly to INSTALLED_APPS in config/settings.py."
                 },
                 {
-                    error: "Broken logo image icon inside Gmail/Outlook recipient inbox",
-                    cause: "External Bing CDN URL failed CORS, referer checks, and email proxy filters.",
-                    solution: "Migrated to inline CID (Content-ID) embedding using MIMEImage, attaching the local prushal-logo.webp directly to the email payload."
+                    error: "Application labels aren't unique, duplicates: messages",
+                    cause: "Attempted to use the reserved app label 'messages' which collided with django.contrib.messages.",
+                    solution: "Renamed the custom application to 'contact' eliminating namespace collision."
                 },
                 {
-                    error: "NameError: name 'logger' is not defined",
-                    cause: "Logger was used inside a helper before initializing logging.getLogger(__name__).",
-                    solution: "Initialized logger = logging.getLogger(__name__) at the module top level."
+                    error: "Broken logo image in recipient email clients (Gmail & Outlook)",
+                    cause: "External Bing CDN URL failed CORS, referer checks, and proxy filters.",
+                    solution: "Attached local prushal-logo.webp via MIMEImage with Content-ID header (<prushal-logo>) and referenced it as <img src='cid:prushal-logo'>."
                 }
             ],
             whatILearned: [
-                "Email HTML requires strict table-based structures and inline CSS because email clients (Outlook, Gmail) ignore modern CSS grids and external stylesheets.",
-                "CID (Content-ID) image embedding packages images directly inside the email payload, bypassing third-party CDN blocking and privacy proxies.",
-                "Database persistence must always be decoupled from email delivery: if SMTP fails, the contact request must remain safely stored in SQLite.",
-                "Python's logging module is essential for production diagnostics, capturing stack traces with logger.exception() while preventing credentials from leaking to stdout."
+                "Django strictly separates global project configuration ('config') from domain-specific modular apps ('contact').",
+                "Email HTML requires table-based layouts and inline styles because email rendering engines ignore modern Flexbox/Grid.",
+                "CID (Content-ID) embedding embeds images directly into the MIME email payload, ensuring reliable offline rendering.",
+                "Database persistence must be independent of email delivery: if SMTP fails, the contact enquiry remains safely stored in SQLite."
             ],
-            whyItMatters: "Decoupling the email service and ensuring database persistence independence guarantees zero data loss. Professional email design establishes company credibility while CID embedding ensures flawless visual rendering on all devices.",
-            nextSteps: "In future phases, introduce an asynchronous task queue (Celery + Redis) to offload SMTP network latency from the request-response cycle."
+            whyItMatters: "Building a reliable, RESTful API layer is the foundational first step. By adhering to REST conventions and isolating external SMTP failures, the backend guarantees zero lead loss.",
+            nextSteps: "Study where and how modern web APIs are hosted, scaled, and managed in the cloud across AWS, Azure, and GCP."
+        },
+        {
+            date: "2026-08-11",
+            dayOfWeek: "Tuesday",
+            title: "Task 2: AWS vs Azure vs GCP — Cloud Cost, Functionality & Architecture Comparison",
+            category: "Cloud Computing",
+            project: "cloud-platform-evaluation",
+            status: "completed",
+            summary: "Conducted an in-depth comparative research study across the three dominant hyperscale cloud providers: Amazon Web Services (AWS), Microsoft Azure, and Google Cloud Platform (GCP). Evaluated pricing models (On-Demand, Savings Plans, Committed Use, Spot), core service equivalents, networking, Kubernetes (EKS vs AKS vs GKE), serverless, security/IAM, AI/ML platforms, enterprise suitability, and created an architectural decision framework.",
+            technologies: ["Amazon Web Services (AWS)", "Microsoft Azure", "Google Cloud Platform (GCP)", "Cloud Pricing Models", "Kubernetes (EKS/AKS/GKE)", "Serverless", "IAM & Zero Trust", "Terraform", "Cloud Architecture"],
+            tasks: [
+                { title: "Analyze cloud pricing models: On-demand vs Savings Plans vs Committed Use vs Spot capacity", completed: true },
+                { title: "Build comprehensive 26-row service comparison matrix across AWS, Azure, and GCP", completed: true },
+                { title: "Evaluate Compute ecosystems: AWS EC2 vs Azure Virtual Machines vs GCP Compute Engine", completed: true },
+                { title: "Evaluate Storage tiers: AWS S3 vs Azure Blob Storage vs Google Cloud Storage", completed: true },
+                { title: "Evaluate Managed Databases: AWS RDS/DynamoDB vs Azure SQL/Cosmos DB vs Cloud SQL/Firestore", completed: true },
+                { title: "Compare Kubernetes engines: AWS EKS vs Azure AKS vs Google Kubernetes Engine (GKE)", completed: true },
+                { title: "Compare Serverless architectures: AWS Lambda vs Azure Functions vs Google Cloud Run", completed: true },
+                { title: "Analyze Cloud Networking: VPCs, Subnets, Security Groups, Load Balancers, and Data Transfer Egress costs", completed: true },
+                { title: "Examine IAM, Identity & Security: AWS IAM vs Microsoft Entra ID vs GCP Cloud IAM & Zero Trust", completed: true },
+                { title: "Compare AI/ML Platforms: AWS SageMaker vs Azure AI Studio vs Google Vertex AI", completed: true },
+                { title: "Model a real-world web application architecture (Django API + DB + Storage) across all three clouds", completed: true },
+                { title: "Formulate a practical 'Which Cloud Should I Choose?' decision guide for startups and enterprises", completed: true },
+                { title: "Develop beginner learning pathways and analyze transferable cloud engineering skills", completed: true }
+            ],
+            topicsLearned: [
+                "aws-vs-azure-vs-gcp",
+                "cloud-pricing-models",
+                "aws-services-ecosystem",
+                "azure-services-ecosystem",
+                "gcp-services-ecosystem",
+                "storage-compute-databases",
+                "kubernetes-and-serverless",
+                "cloud-networking-and-security",
+                "architecture-cost-case-study",
+                "beginner-and-career-perspective",
+                "future-celery-scaling"
+            ],
+            timeline: [
+                { time: "09:00", event: "Formulated research methodology and pricing model variables" },
+                { time: "11:00", event: "Constructed 26-category service mapping matrix (AWS vs Azure vs GCP)" },
+                { time: "13:30", event: "Deep-dive into Kubernetes (EKS vs AKS vs GKE) and Serverless (Lambda vs Functions vs Cloud Run)" },
+                { time: "15:15", event: "Detailed networking, IAM security, and data transfer egress cost analysis" },
+                { time: "16:45", event: "Synthesized web app cost case study and compiled comprehensive decision frameworks" }
+            ],
+            problems: [
+                {
+                    error: "Misleading 'Cheapest Cloud Provider' Single Price Fallacy",
+                    cause: "Naive comparisons attempt to declare one cloud universally cheapest based on a single isolated virtual machine price.",
+                    solution: "Adopted a 3-level evaluation model: Level 1 Quick Decision, Level 2 Service Comparison, and Level 3 Multi-Variable Cost Study factoring in Region, RAM-to-CPU ratio, data egress, storage IOPS, and commitment discounts."
+                },
+                {
+                    error: "Hidden Data Egress & Inter-AZ Networking Costs",
+                    cause: "Organizations frequently incur unexpected bills when transferring data between Availability Zones or across internet egress boundaries.",
+                    solution: "Documented inter-AZ transfer fees (~$0.01/GB) and internet egress fees ($0.08 - $0.12/GB), recommending VPC peering, CDN caching, and same-region co-location."
+                }
+            ],
+            whatILearned: [
+                "There is no universally 'cheapest' or 'best' cloud provider; optimal selection depends on workload characteristics, data gravity, and existing enterprise contracts.",
+                "AWS excels in breadth of services, market maturity, and granular infrastructure customization.",
+                "Azure dominates enterprise IT environments leveraging existing Windows Server, .NET, and Microsoft Entra ID (Active Directory) enterprise agreements.",
+                "GCP is the industry benchmark for developer experience, Kubernetes (GKE), big data analytics (BigQuery), and AI/ML (Vertex AI).",
+                "Fundamental architectural concepts (VPC, IAM, Block/Object Storage, Containers, CI/CD, IaC) are 100% transferable across all cloud providers."
+            ],
+            whyItMatters: "Understanding cloud trade-offs is essential for modern software engineers. It enables teams to architect scalable, secure, and cost-effective deployments rather than relying on guesswork.",
+            nextSteps: "Explore Infrastructure as Code (Terraform / OpenTofu) to automate repeatable cloud provisioning across AWS, Azure, and GCP."
         }
     ],
 
     // =========================================================================
-    // 2. KNOWLEDGE BASE ARTICLES (Layer 3)
+    // 2. DEEP KNOWLEDGE BASE ARTICLES (Layer 3)
     // =========================================================================
     topics: {
+        // --- BACKEND TOPICS ---
         "django-architecture": {
             id: "django-architecture",
             title: "Django Architecture & Request Lifecycle",
@@ -193,12 +211,6 @@ SMTP Server (Gmail TLS on Port 587)
       ↓
 Recipients (Customer Acknowledgement & Admin Notification)
 \`\`\``
-                },
-                {
-                    heading: "Best Practices & Common Pitfalls",
-                    content: `1. **Never mutate global settings dynamically**: Always read configuration through \`django.conf.settings\`.
-2. **Avoid circular imports**: Keep service functions in dedicated subpackages (\`services/\`) rather than importing views inside models.
-3. **App registration**: Always register newly created apps in \`INSTALLED_APPS\` inside \`settings.py\` before running migrations.`
                 }
             ],
             codeExample: {
@@ -240,11 +252,6 @@ python -m venv venv
 # 3. Install project dependencies
 pip install django djangorestframework python-dotenv
 \`\`\``
-                },
-                {
-                    heading: "Best Practices",
-                    content: `- Always add \`venv/\` to \`.gitignore\` so that environment binaries are never committed to version control.
-- Generate a reproducible \`requirements.txt\` using \`pip freeze > requirements.txt\`.`
                 }
             ]
         },
@@ -263,13 +270,12 @@ pip install django djangorestframework python-dotenv
                 },
                 {
                     heading: "The ContactMessage Model Schema",
-                    content: `The \`ContactMessage\` model is defined in \`contact/models.py\` and captures all fields submitted by the website contact form:
-
-- **name**: \`CharField(max_length=100)\` — The visitor's full name.
-- **email**: \`EmailField()\` — The visitor's email address (with built-in email syntax validation).
-- **contact_no**: \`CharField(max_length=15)\` — Contact phone number.
-- **message**: \`TextField()\` — The body text of the enquiry.
-- **created_at**: \`DateTimeField(auto_now_add=True)\` — Automatically records the UTC timestamp when the record is created.`
+                    content: `The \`ContactMessage\` model in \`contact/models.py\` captures:
+- **name**: \`CharField(max_length=100)\` — Visitor's full name.
+- **email**: \`EmailField()\` — Email address with built-in validation.
+- **contact_no**: \`CharField(max_length=15)\` — Phone number.
+- **message**: \`TextField()\` — Submitted message text.
+- **created_at**: \`DateTimeField(auto_now_add=True)\` — UTC creation timestamp.`
                 }
             ],
             codeExample: {
@@ -303,14 +309,6 @@ class ContactMessage(models.Model):
                     content: `In Django REST Framework (DRF), **Serializers** serve a dual purpose:
 1. **Serialization**: Converting complex Python/Django Model instances into native Python datatypes that can easily be rendered into JSON responses.
 2. **Deserialization & Validation**: Parsing incoming JSON request payloads, validating data types and constraints against model rules, and converting validated data into Django model instances.`
-                },
-                {
-                    heading: "Validation Workflow",
-                    content: `When a POST request reaches the view:
-1. \`serializer = ContactMessageSerializer(data=request.data)\` initializes the serializer.
-2. \`serializer.is_valid()\` checks field constraints (e.g., valid email formatting, character lengths, non-empty fields).
-3. If valid, \`serializer.save()\` commits the record to SQLite and returns the created model instance.
-4. If invalid, \`serializer.errors\` produces a structured error dictionary with field-specific messages, allowing the view to return \`HTTP 400 Bad Request\`.`
                 }
             ],
             codeExample: {
@@ -337,17 +335,12 @@ class ContactMessageSerializer(serializers.ModelSerializer):
             sections: [
                 {
                     heading: "View Responsibility & Separation of Concerns",
-                    content: `A core software engineering principle is **Separation of Concerns**. The API view in \`contact/views.py\` acts as an HTTP controller:
+                    content: `The API view in \`contact/views.py\` acts as an HTTP controller:
 - It handles the incoming HTTP request method (\`GET\` vs \`POST\`).
 - It delegates payload validation to the serializer.
 - It saves the model instance to SQLite.
 - It triggers the external email service.
-- It formats and returns the HTTP status response (\`201 Created\` or \`400 Bad Request\`).
-
-**What the view should NOT contain:**
-- Raw HTML email templates or inline styling.
-- SMTP connection parameters or email sending logic.
-- Complex error-handling logic for mail servers.`
+- It formats and returns the HTTP status response (\`201 Created\` or \`400 Bad Request\`).`
                 }
             ],
             codeExample: {
@@ -388,14 +381,7 @@ def contact_messages(request):
             sections: [
                 {
                     heading: "Why Introduce a Service Layer?",
-                    content: `In standard Django tutorials, developers often place \`send_mail()\` calls directly inside views or model save hooks. While functional for tiny scripts, this creates severe architectural issues:
-1. **Bloated Views ("Fat Views")**: Views become hundreds of lines long with template rendering, MIME headers, and email attachments.
-2. **Tight Coupling**: Testing views requires mocking entire SMTP networks.
-3. **Difficult Refactoring**: Migrating from synchronous SMTP to Celery background workers becomes a massive rewrite if email code is scattered across views.`
-                },
-                {
-                    heading: "Our Implementation: contact/services/email_service.py",
-                    content: `By encapsulating all email construction, context preparation, template rendering, logo attachment, and error handling inside \`send_contact_emails()\`, our view remains only 5 lines of execution logic.`
+                    content: `Placing \`send_mail()\` calls directly inside views creates "Fat Views" that become hundreds of lines long, are difficult to unit test, and tightly couple HTTP handlers to SMTP networks. Extracting this into \`contact/services/email_service.py\` keeps views lean and prepares the codebase for asynchronous worker queues.`
                 }
             ]
         },
@@ -406,47 +392,11 @@ def contact_messages(request):
             category: "Email & Infrastructure",
             difficulty: "Intermediate",
             tags: ["SMTP", "Gmail", "Security", "TLS", "Port 587"],
-            summary: "How the Simple Mail Transfer Protocol (SMTP) works over TLS on Port 587, how to securely generate Gmail App Passwords, and managing credentials via .env.",
+            summary: "How the Simple Mail Transfer Protocol (SMTP) works over TLS on Port 587, generating Gmail App Passwords, and managing credentials via .env.",
             sections: [
                 {
-                    heading: "What is SMTP?",
-                    content: `The **Simple Mail Transfer Protocol (SMTP)** is the internet standard communication protocol for electronic mail transmission. In our architecture, Django acts as an SMTP client connecting to Google's mail transfer agent at \`smtp.gmail.com\` over port \`587\` with **STARTTLS** encryption.`
-                },
-                {
-                    heading: "Gmail App Passwords",
-                    content: `Modern email providers (Google, Microsoft) disallow authenticating with a primary account password due to Multi-Factor Authentication (2FA) security requirements. Instead, a dedicated **16-character App Password** is generated specifically for the Django application. This password grants scoped SMTP relay access without exposing the primary Google account credentials.`
-                },
-                {
-                    heading: "Credential Management via .env",
-                    content: `Under no circumstances should plain-text passwords be committed to Git. The project uses \`python-dotenv\` to load variables from a local \`.env\` file in the project root:
-
-\`\`\`ini
-EMAIL_HOST_USER=master.rohit90@gmail.com
-EMAIL_HOST_PASSWORD=your_16_char_app_password
-\`\`\`
-
-In \`settings.py\`:
-\`\`\`python
-from dotenv import load_dotenv
-import os
-
-load_dotenv(BASE_DIR / '.env')
-
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
-        'OPTIONS': {
-            'host': 'smtp.gmail.com',
-            'port': 587,
-            'username': os.getenv('EMAIL_HOST_USER'),
-            'password': os.getenv('EMAIL_HOST_PASSWORD'),
-            'use_tls': True,
-            'timeout': 10,
-        },
-    },
-}
-DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
-\`\`\``
+                    heading: "What is SMTP & TLS?",
+                    content: `The **Simple Mail Transfer Protocol (SMTP)** is the standard protocol for electronic mail transmission. In our architecture, Django acts as an SMTP client connecting to \`smtp.gmail.com\` on port \`587\` using **STARTTLS** encryption. Modern 2FA requires generating a dedicated 16-character **Gmail App Password** rather than using raw account credentials.`
                 }
             ]
         },
@@ -461,31 +411,9 @@ DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
             sections: [
                 {
                     heading: "What is EmailMultiAlternatives?",
-                    content: `Django's \`EmailMultiAlternatives\` class extends \`EmailMessage\` to create **MIME multipart/alternative** email payloads. A multipart/alternative email contains two distinct versions of the exact same message:
-1. A **Plain-Text version** (\`text/plain\`)
-2. A **Rich HTML version** (\`text/html\`)`
-                },
-                {
-                    heading: "Why is Plain-Text Fallback Mandatory?",
-                    content: `- **Accessibility & Screen Readers**: Visually impaired users using terminal clients or screen readers rely on clear plain-text formatting.
-- **Spam Deliverability**: Spam filters (SpamAssassin, Google Postmaster) penalize emails that contain only HTML without a corresponding plain-text alternative.
-- **Low-Bandwidth & Security Clients**: Secure enterprise environments and smartwatches often strip HTML scripts and display the plain-text body.`
+                    content: `Django's \`EmailMultiAlternatives\` class creates **MIME multipart/alternative** email payloads containing both a plain-text version (\`text/plain\`) and a rich HTML version (\`text/html\`). Plain-text fallbacks ensure screen-reader accessibility, reduce spam filter penalties, and support low-bandwidth clients.`
                 }
-            ],
-            codeExample: {
-                language: "python",
-                title: "Using EmailMultiAlternatives",
-                code: `from django.core.mail import EmailMultiAlternatives
-
-email = EmailMultiAlternatives(
-    subject="Thank you for contacting Prushal Technology",
-    body=plain_text_content,            # text/plain primary body
-    from_email=settings.DEFAULT_FROM_EMAIL,
-    to=[contact_message.email]
-)
-email.attach_alternative(html_content, "text/html")  # text/html alternative
-email.send()`
-            }
+            ]
         },
 
         "html-email-standards": {
@@ -494,22 +422,15 @@ email.send()`
             category: "Frontend & Design",
             difficulty: "Intermediate",
             tags: ["HTML", "Email", "CSS", "Tables", "Outlook", "Gmail"],
-            summary: "Why web HTML differs drastically from email HTML, why table layouts are necessary, and design rules for Gmail, Outlook, and Apple Mail.",
+            summary: "Why web HTML differs from email HTML, why table layouts are mandatory, and design rules for Gmail, Outlook, and Apple Mail.",
             sections: [
                 {
-                    heading: "Why is Email HTML Different From Web HTML?",
-                    content: `Unlike modern web browsers (Chrome, Firefox, Safari) which support CSS Flexbox, CSS Grid, and modern JavaScript, email clients use disparate and outdated rendering engines:
-- **Outlook for Windows**: Uses Microsoft Word's HTML/CSS rendering engine (no Flexbox, no CSS Grid, no \`calc()\`).
-- **Gmail**: Strips \`<style>\` tags in some mobile clients and ignores external stylesheets.
-- **Apple Mail**: Uses WebKit (modern support), but emails must remain compatible with the lowest common denominator.`
-                },
-                {
-                    heading: "Core Email Design Rules",
-                    content: `1. **Table-Based Layouts**: Use \`<table>\`, \`<tr>\`, and \`<td>\` for all layout containers and spacing.
-2. **Inline CSS**: Apply styles directly to HTML elements via \`style="..."\` attributes.
-3. **Fixed/Max Container Width**: Restrict the main container to \`600px\` width.
-4. **Safe System Fonts**: Use \`-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif\`.
-5. **No JavaScript**: Script tags are blocked as high-security risks by 100% of mail clients.`
+                    heading: "Email HTML vs Web HTML",
+                    content: `Email clients (especially Microsoft Outlook for Windows, which renders via Microsoft Word) do not support CSS Flexbox, Grid, or external stylesheets. Email HTML must rely on:
+1. **Table-Based Layouts** (\`<table>\`, \`<tr>\`, \`<td>\`)
+2. **Inline CSS** via \`style="..."\` attributes
+3. **600px Max-Width** container boundaries
+4. **Safe System Fonts** (-apple-system, Segoe UI, Arial)`
                 }
             ]
         },
@@ -520,27 +441,15 @@ email.send()`
             category: "Email & Infrastructure",
             difficulty: "Advanced",
             tags: ["CID", "MIMEImage", "Branding", "Attachments"],
-            summary: "Analyzing the 3 approaches to loading email images (Local path vs Public CDN vs CID inline embedding) and resolving the Bing CDN failure.",
+            summary: "Analyzing the 3 approaches to loading email images and resolving the external Bing CDN failure via inline MIMEImage attachments.",
             sections: [
                 {
                     heading: "The 3 Image Loading Approaches",
-                    content: `When embedding branding logos into emails, developers typically consider three methods:
-
-| Method | Syntax | Pros | Cons | Verdict |
-| :--- | :--- | :--- | :--- | :--- |
-| **1. Local Windows Path** | \`<img src="C:\\Users\\...\\logo.webp">\` | Works only on local machine | Broken for all external recipients | **INVALID** |
-| **2. Public HTTPS URL** | \`<img src="https://example.com/logo.png">\` | Lightweight email size | Blocked by default in Outlook/Gmail; fails if CDN is unreachable | **Acceptable in Prod** |
-| **3. CID Inline Embedding** | \`<img src="cid:prushal-logo">\` | Displays offline, zero broken links, no CDN dependency | Increases email byte payload slightly | **RECOMMENDED & IMPLEMENTED** |`
-                },
-                {
-                    heading: "The Real-World Bing CDN Failure",
-                    content: `During initial development, an external Bing-hosted image URL was tested:
-\`https://th.bing.com/th/id/OIP.ikyDmQJ4wmfkwCL254Z8HQHaHa?...\`
-
-When delivered to Gmail and Outlook, the email displayed a broken image icon. Investigation revealed that third-party image CDNs frequently block hotlinking via referer checks, or trigger email client anti-tracking privacy blockers.
-
-**The Fix:**
-We imported the official \`prushal-logo.webp\` into \`contact/static/contact/images/\` and embedded it as a direct MIME part using \`MIMEImage\` with header \`Content-ID: <prushal-logo>\`.`
+                    content: `| Method | Syntax | Reliability | Verdict |
+| :--- | :--- | :--- | :--- |
+| **1. Local Path** | \`<img src="C:\\Users\\...\\logo.webp">\` | Fails for all external recipients | **INVALID** |
+| **2. Public CDN** | \`<img src="https://example.com/logo.png">\` | Blocked by default in Outlook/Gmail | **Acceptable in Prod** |
+| **3. CID Embedding** | \`<img src="cid:prushal-logo">\` | Zero broken links; offline rendering | **RECOMMENDED & IMPLEMENTED** |`
                 }
             ],
             codeExample: {
@@ -567,23 +476,7 @@ with open('contact/static/contact/images/prushal-logo.webp', 'rb') as f:
             sections: [
                 {
                     heading: "The Persistence Independence Rule",
-                    content: `A catastrophic flaw in naive API implementations is coupling database transactions to external network services:
-
-\`\`\`python
-# ANTI-PATTERN (BAD PRACTICE):
-serializer.save()
-send_mail(...)  # If SMTP fails here, an unhandled exception triggers a 500 error or database rollback!
-\`\`\`
-
-If an external mail server is temporarily down, experiencing network timeouts, or rate-limiting requests, the visitor's submitted contact information **must still be safely saved in SQLite**. The company cannot afford to lose business leads due to an email delivery hiccup.`
-                },
-                {
-                    heading: "Resilient Error Isolation",
-                    content: `In our architecture:
-1. \`contact_message = serializer.save()\` commits the record to SQLite first.
-2. \`send_contact_emails(contact_message)\` wraps customer and admin email dispatches in independent \`try...except\` blocks.
-3. If SMTP raises an \`SMTPException\` or connection timeout, the error is caught, logged with full stack traces, and suppressed from bubbling up to the HTTP response.
-4. The client receives \`HTTP 201 Created\` confirming their submission was recorded.`
+                    content: `If SMTP fails due to network timeouts or rate limits, the visitor's submitted contact information **must still be safely saved in SQLite**. In our architecture, \`serializer.save()\` commits the record first, and \`send_contact_emails()\` isolates email exceptions inside \`try...except\` blocks, logging errors without interrupting \`HTTP 201 Created\`.`
                 }
             ]
         },
@@ -598,28 +491,11 @@ If an external mail server is temporarily down, experiencing network timeouts, o
             sections: [
                 {
                     heading: "Why Logging Over print()?",
-                    content: `Many beginner developers rely on \`print()\` for debugging. In production web applications, this is considered an anti-pattern for several reasons:
-
-1. **Log Levels**: The \`logging\` module provides severity levels (\`DEBUG\`, \`INFO\`, \`WARNING\`, \`ERROR\`, \`CRITICAL\`), allowing developers to filter noise in production.
-2. **Stack Trace Capture**: \`logger.exception("Error message")\` automatically appends full traceback details to log files.
-3. **Log Destinations**: Logs can be routed simultaneously to consoles, rotating files, or centralized logging aggregators (Datadog, AWS CloudWatch, Sentry).
-4. **Security**: \`print()\` statements easily leak sensitive variables (passwords, auth tokens) to standard out, where they can be captured by unsecured container logs.`
+                    content: `1. **Log Levels**: Filter noise via \`DEBUG\`, \`INFO\`, \`WARNING\`, \`ERROR\`, \`CRITICAL\`.
+2. **Stack Trace Capture**: \`logger.exception()\` automatically captures full traceback details.
+3. **Security**: \`print()\` statements easily leak passwords or auth tokens to stdout container logs.`
                 }
-            ],
-            codeExample: {
-                language: "python",
-                title: "Configuring Logging (contact/services/email_service.py)",
-                code: `import logging
-
-logger = logging.getLogger(__name__)
-
-try:
-    user_email.send(fail_silently=False)
-    logger.info("Successfully sent acknowledgement email to %s", contact_message.email)
-except Exception:
-    logger.exception("Failed to send acknowledgement email to %s", contact_message.email)
-`
-            }
+            ]
         },
 
         "security-credential-management": {
@@ -631,21 +507,10 @@ except Exception:
             summary: "Best practices for protecting credentials, sanitizing user-provided email content, preventing XSS injection, and securing production Django deployments.",
             sections: [
                 {
-                    heading: "Zero Hard-Coded Secrets",
-                    content: `- **SMTP Passwords & Gmail App Keys**: Always stored in \`.env\` and loaded through environment variables.
-- **Django SECRET_KEY**: Must be kept secret and replaced in production.
-- **Git Version Control**: Ensure \`.gitignore\` explicitly ignores \`.env\`, \`db.sqlite3\`, and \`*.pyc\` files.`
-                },
-                {
-                    heading: "HTML Email Sanitization & XSS Prevention",
-                    content: `When rendering user-submitted text (\`{{ message }}\`) inside HTML templates, Django's template engine automatically escapes dangerous HTML tags (\`<script>\`, \`<iframe>\`, \`<img onerror=...>\`) by default, preventing Cross-Site Scripting (XSS) attacks in recipient email clients.`
-                },
-                {
-                    heading: "Production Checklist",
-                    content: `- \`DEBUG = False\` in production settings.
-- Restrict \`ALLOWED_HOSTS = ['api.prushal.com', 'www.prushal.com']\`.
-- Enforce HTTPS via \`SECURE_SSL_REDIRECT = True\` and \`SESSION_COOKIE_SECURE = True\`.
-- Implement API Rate Limiting (throttling) in DRF to prevent spam abuse.`
+                    heading: "Security Essentials",
+                    content: `- **Zero Hard-Coded Secrets**: Keep passwords in \`.env\` and add \`.env\` to \`.gitignore\`.
+- **XSS Prevention**: Django template engine automatically escapes user input (\`{{ message }}\`) by default.
+- **Production Hardening**: \`DEBUG = False\`, restrict \`ALLOWED_HOSTS\`, enforce HTTPS with \`SECURE_SSL_REDIRECT = True\`.`
                 }
             ]
         },
@@ -659,39 +524,299 @@ except Exception:
             summary: "Why synchronous SMTP introduces latency, and the architectural design for future background email workers using Celery and Redis.",
             sections: [
                 {
-                    heading: "The Latency Problem with Synchronous SMTP",
-                    content: `In the current implementation, email sending is **synchronous**:
-1. Visitor clicks "Submit".
-2. Django connects to Gmail SMTP over TLS (takes ~1.5 - 3.0 seconds).
-3. Two emails are transmitted over the network.
-4. Django returns \`HTTP 201 Created\` to the visitor.
+                    heading: "The Latency Problem & Celery Solution",
+                    content: `Synchronous SMTP takes ~1.5 - 3.0 seconds per request. In future high-throughput architectures, the view will commit to the database and immediately dispatch a background task to a **Redis broker**, where a **Celery worker** handles SMTP transmission asynchronously, returning HTTP 201 in under 50ms.`
+                }
+            ]
+        },
 
-While simple and reliable for initial launch, under high traffic this network round-trip delays the user response.`
+        // --- CLOUD COMPUTING & PLATFORM COMPARISON TOPICS (TASK 2) ---
+        "aws-vs-azure-vs-gcp": {
+            id: "aws-vs-azure-vs-gcp",
+            title: "AWS vs Azure vs GCP — Master Cloud Comparison Guide",
+            category: "Cloud Computing",
+            difficulty: "Intermediate to Advanced",
+            tags: ["AWS", "Azure", "GCP", "Cloud Architecture", "Decision Framework"],
+            summary: "A structured 3-level comparative analysis of Amazon Web Services, Microsoft Azure, and Google Cloud Platform covering quick decisions, service mappings, and cost mechanics.",
+            sections: [
+                {
+                    heading: "Executive Overview & Cloud Philosophy",
+                    content: `The hyperscale cloud market is dominated by three global platforms, each with a distinct engineering philosophy:
+
+1. **Amazon Web Services (AWS)**: The pioneer and market leader. Built around maximum service breadth, granular infrastructure control, and an expansive global partner network. Best for custom architectures and startups.
+2. **Microsoft Azure**: The enterprise leader. Deeply integrated with Microsoft 365, Windows Server, .NET, and Microsoft Entra ID (Active Directory). Dominates Fortune 500 hybrid enterprise environments.
+3. **Google Cloud Platform (GCP)**: The cloud-native innovator. World-class in Kubernetes (GKE), big data analytics (BigQuery), AI/ML (Vertex AI), and private global fiber networking. Best for data-driven, containerized applications.`
                 },
                 {
-                    heading: "Planned Asynchronous Architecture",
-                    content: `In the planned future architecture:
+                    heading: "Level 1: Quick Workload Decision Guide",
+                    content: `| If Your Priority Is... | Recommended Provider | Key Differentiator |
+| :--- | :--- | :--- |
+| **Broadest Ecosystem & Market Maturity** | **AWS** | Largest catalog of managed services, massive community, and deepest tool support. |
+| **Enterprise IT, .NET & Active Directory** | **Azure** | Seamless integration with Entra ID, Microsoft 365, hybrid Windows Server licenses. |
+| **Kubernetes & Cloud-Native Containers** | **GCP** | Google Kubernetes Engine (GKE) offers the most advanced automated control plane. |
+| **Big Data, SQL Analytics & Warehousing** | **GCP** | BigQuery provides unmatched serverless petabyte-scale querying without index tuning. |
+| **Enterprise Hybrid Cloud** | **Azure** | Azure Arc and Azure Stack provide superior on-premises to cloud hybrid management. |
+| **Granular Infrastructure Customization** | **AWS** | Over 700+ EC2 instance types with tailored processor, memory, and accelerator ratios. |
+| **Generative AI & LLM Foundation Models** | **GCP / AWS / Azure** | GCP Vertex AI (Gemini), Azure AI (OpenAI partnership), AWS SageMaker (Bedrock). |`
+                },
+                {
+                    heading: "Level 2: Comprehensive 26-Category Service Comparison Matrix",
+                    content: `| Functional Domain | Amazon Web Services (AWS) | Microsoft Azure | Google Cloud Platform (GCP) |
+| :--- | :--- | :--- | :--- |
+| **1. Primary Compute (VMs)** | EC2 (Elastic Compute Cloud) | Azure Virtual Machines | Compute Engine |
+| **2. Object Storage** | Amazon S3 | Azure Blob Storage | Google Cloud Storage (GCS) |
+| **3. Block Storage** | EBS (Elastic Block Store) | Azure Managed Disks | Persistent Disk |
+| **4. File Storage** | Amazon EFS / FSx | Azure Files / NetApp Files | Cloud Filestore |
+| **5. Managed Relational DB** | Amazon RDS / Aurora | Azure SQL Database / Flexible Server | Cloud SQL / AlloyDB |
+| **6. Managed NoSQL DB** | DynamoDB / DocumentDB | Cosmos DB | Firestore / Bigtable |
+| **7. Serverless Compute** | AWS Lambda | Azure Functions | Cloud Run / Cloud Functions |
+| **8. Managed Kubernetes** | Amazon EKS | Azure Kubernetes Service (AKS) | Google Kubernetes Engine (GKE) |
+| **9. Container Services** | Amazon ECS / Fargate | Azure Container Instances / Apps | Cloud Run (Knative-based) |
+| **10. Virtual Networking** | Amazon VPC | Azure Virtual Network (VNet) | Google VPC (Global by default) |
+| **11. Identity & Access (IAM)** | AWS IAM | Microsoft Entra ID + Azure RBAC | Google Cloud IAM |
+| **12. Monitoring & Logging** | Amazon CloudWatch | Azure Monitor / Log Analytics | Google Cloud Operations (Stackdriver) |
+| **13. CI/CD & DevOps** | CodePipeline / CodeBuild | Azure DevOps / GitHub Enterprise | Cloud Build / Cloud Deploy |
+| **14. AI & Machine Learning** | Amazon SageMaker / Bedrock | Azure OpenAI / Azure AI Studio | Vertex AI (Gemini Models) |
+| **15. Big Data & Analytics** | Amazon EMR / Athena / Redshift | Azure Synapse Analytics / Data Factory | BigQuery / Dataproc / Dataflow |
+| **16. Container Registry** | Amazon ECR | Azure Container Registry (ACR) | Artifact Registry |
+| **17. Secrets Management** | AWS Secrets Manager / KMS | Azure Key Vault | Google Secret Manager / Cloud KMS |
+| **18. DNS & Traffic Routing** | Route 53 | Azure DNS / Traffic Manager | Cloud DNS |
+| **19. Load Balancing** | Application / Network Load Balancers | Azure Application Gateway / Load Balancer | Cloud Load Balancing (Single Anycast IP) |
+| **20. Infrastructure as Code** | AWS CloudFormation / CDK | Azure Bicep / ARM Templates | Google Cloud Deployment Manager / Terraform |
+| **21. Global Infrastructure** | 34 Regions, 108 Availability Zones | 60+ Regions (Broader geographic presence) | 40 Regions, 121 Availability Zones |
+| **22. Hybrid Cloud** | AWS Outposts / AWS Local Zones | Azure Arc / Azure Stack Hub | Google Anthos (GKE Enterprise) |
+| **23. Developer Experience** | AWS Management Console & AWS CLI | Azure Portal & Azure CLI | Google Cloud Console & \`gcloud\` CLI |
+| **24. Open-Source Friendliness** | Strong | High (Active Linux/OSS contributor) | Highest (Creator of Kubernetes & Go) |
+| **25. Startup Suitability** | High ($100k AWS Activate credits) | Moderate (Microsoft for Startups) | High (Google Cloud for Startups) |
+| **26. Pricing Flexibility** | Savings Plans / Reserved Instances / Spot | Azure Savings Plans / Reserved / Spot | Committed Use Discounts / Preemptible VMs |`
+                },
+                {
+                    heading: "Level 3: Cost Study & Pricing Model Mechanics",
+                    content: `Cloud pricing is determined by five primary cost vectors:
+1. **Compute Runtime**: Billed per-second or per-hour. Discounted via 1-year or 3-year commitments (AWS Savings Plans, Azure Savings Plans, GCP Committed Use Discounts save 40%–72%).
+2. **Storage Volume & Tier**: S3 Standard vs Glacier, Blob Hot vs Archive, GCS Standard vs Coldline. Billed per GB-month plus read/write request API fees.
+3. **Data Egress (Outbound Network)**: Inbound data transfer is 100% free across all providers. Outbound internet egress ranges from $0.08 to $0.12 per GB after free allowances.
+4. **Managed Service Premiums**: Managed databases (RDS, Azure SQL, Cloud SQL) add ~30%–50% markup over raw VM compute to cover automated failover, point-in-time backups, and OS patching.
+5. **Operational Overheads**: NAT Gateways, Static IP addresses, and load balancer rule processing fees contribute heavily to baseline monthly spend.`
+                }
+            ]
+        },
 
-\`\`\`
-Client / Postman
-      ↓ (HTTP POST)
-Django DRF View
-      ↓
-Save ContactMessage to SQLite / PostgreSQL
-      ↓
-Dispatch Celery Background Task (contact_id)
-      ↓ (Returns HTTP 201 immediately in 50ms!)
-Redis Message Broker
-      ↓
-Celery Asynchronous Worker
-      ↓
-Execute email_service.py (SMTP Relay)
-      ↓
-Recipient Mailboxes
-\`\`\`
+        "cloud-pricing-models": {
+            id: "cloud-pricing-models",
+            title: "Cloud Pricing Models: On-Demand, Commitments & Spot",
+            category: "Cloud Economics",
+            difficulty: "Intermediate",
+            tags: ["Pricing", "FinOps", "Savings Plans", "Spot Instances", "Economics"],
+            summary: "Detailed breakdown of On-Demand vs Reserved vs Savings Plans vs Spot/Preemptible VMs and FinOps cost optimization principles.",
+            sections: [
+                {
+                    heading: "The 4 Core Compute Pricing Models",
+                    content: `1. **On-Demand / Pay-As-You-Go**:
+   - Maximum flexibility, zero commitment, highest per-hour price.
+   - Best for: Unpredictable workloads, new product testing, development environments.
 
-**Why Not Introduce Celery Now?**
-Introducing Celery prematurely requires running a Redis server daemon, configuring worker processes, handling serialization, and managing broker monitoring. The immediate priority is establishing a robust, tested synchronous pipeline first.`
+2. **Reserved Instances (RIs) & Savings Plans**:
+   - 1-year or 3-year commitment for steady-state workloads.
+   - Yields 35% to 72% discounts compared to on-demand pricing.
+   - AWS offers Compute Savings Plans (flexible across instance families/regions); Azure offers Azure Savings Plans; GCP offers Resource-Based and Flexible Committed Use Discounts (CUDs).
+
+3. **Spot Instances / Preemptible VMs**:
+   - Purchasing surplus, unused cloud capacity at up to **80%–90% discount**.
+   - Trade-off: The cloud provider can reclaim the instance with 30–120 seconds notice when demand spikes.
+   - Best for: Fault-tolerant stateless batch processing, CI/CD runners, rendering, big data workloads.
+
+4. **Free Tier & Credits**:
+   - All three providers offer a free tier (e.g. AWS 750 hours/month of t2.micro/t3.micro for 12 months; GCP always-free e2-micro instance; Azure $200 initial credits).`
+                }
+            ]
+        },
+
+        "aws-services-ecosystem": {
+            id: "aws-services-ecosystem",
+            title: "AWS Services Ecosystem Deep-Dive",
+            category: "Cloud Computing",
+            difficulty: "Intermediate",
+            tags: ["AWS", "EC2", "S3", "RDS", "Lambda", "EKS"],
+            summary: "Comprehensive architectural examination of Amazon Web Services core compute, storage, database, serverless, and security services.",
+            sections: [
+                {
+                    heading: "Core AWS Infrastructure Services",
+                    content: `- **Compute (EC2)**: Elastic Compute Cloud provides resizable virtual machine capacity across Intel, AMD, and custom ARM-based Graviton processors.
+- **Storage (S3)**: Simple Storage Service provides industry-standard 99.999999999% (11 9's) data durability for object data, with lifecycle policies to Glacier.
+- **Databases (RDS & Aurora)**: Managed relational databases supporting PostgreSQL, MySQL, MariaDB, Oracle, and SQL Server. Aurora offers cloud-native distributed storage.
+- **Serverless (Lambda)**: Event-driven compute that executes code in response to HTTP requests, S3 events, or queue messages with zero server management.
+- **Containers (EKS & ECS)**: Elastic Kubernetes Service provides upstream-compliant Kubernetes; Elastic Container Service provides AWS-native simplified container orchestration.`
+                }
+            ]
+        },
+
+        "azure-services-ecosystem": {
+            id: "azure-services-ecosystem",
+            title: "Microsoft Azure Services Ecosystem Deep-Dive",
+            category: "Cloud Computing",
+            difficulty: "Intermediate",
+            tags: ["Azure", "Entra ID", "Blob Storage", "AKS", "Azure SQL"],
+            summary: "Comprehensive examination of Microsoft Azure's enterprise-first cloud architecture, Microsoft Entra ID identity, and developer tooling.",
+            sections: [
+                {
+                    heading: "Core Azure Infrastructure Services",
+                    content: `- **Compute (Azure Virtual Machines)**: Windows Server and Linux virtual machines integrated with Azure Hybrid Benefit for license reuse.
+- **Storage (Azure Blob Storage)**: Scalable object storage with Hot, Cool, Cold, and Archive access tiers.
+- **Databases (Azure SQL Database)**: Fully managed SQL Server engine with built-in AI tuning and serverless compute tiers.
+- **Identity (Microsoft Entra ID)**: Formerly Azure Active Directory, the gold standard enterprise identity provider supporting Single Sign-On (SSO) and Conditional Access.
+- **Kubernetes (AKS)**: Azure Kubernetes Service with native Entra ID RBAC integration and free cluster management master nodes.`
+                }
+            ]
+        },
+
+        "gcp-services-ecosystem": {
+            id: "gcp-services-ecosystem",
+            title: "Google Cloud Platform (GCP) Ecosystem Deep-Dive",
+            category: "Cloud Computing",
+            difficulty: "Intermediate",
+            tags: ["GCP", "GKE", "BigQuery", "Cloud Run", "Vertex AI"],
+            summary: "Comprehensive examination of Google Cloud Platform's cloud-native architecture, Google Kubernetes Engine, and big data capabilities.",
+            sections: [
+                {
+                    heading: "Core GCP Infrastructure Services",
+                    content: `- **Compute Engine**: Fast VM provisioning with custom vCPU and memory sizing (allowing arbitrary RAM:CPU ratios).
+- **Google Kubernetes Engine (GKE)**: The premier Kubernetes implementation offering Autopilot mode for fully automated node provisioning and security hardening.
+- **Serverless Containers (Cloud Run)**: Fully managed platform that deploys stateless HTTP containers with scale-to-zero capability and per-100ms billing.
+- **Big Data (BigQuery)**: Serverless, highly scalable, and cost-effective multi-cloud data warehouse designed for business agility and petabyte SQL queries.
+- **AI/ML (Vertex AI)**: Unified machine learning platform for training, deploying models, and building generative AI applications using Gemini models.`
+                }
+            ]
+        },
+
+        "storage-compute-databases": {
+            id: "storage-compute-databases",
+            title: "Storage, Compute & Database Paradigms Compared",
+            category: "Cloud Architecture",
+            difficulty: "Intermediate",
+            tags: ["Storage", "Compute", "Databases", "SQL", "NoSQL"],
+            summary: "Deep architectural comparison of Object, Block, and File storage, alongside Relational (SQL) and Distributed (NoSQL) databases across the big 3 clouds.",
+            sections: [
+                {
+                    heading: "Storage Classifications",
+                    content: `1. **Object Storage (S3 / Blob / GCS)**: Unstructured data (images, backups, static assets). Accessed via REST API, highly scalable, 11 9's durability.
+2. **Block Storage (EBS / Managed Disk / Persistent Disk)**: Raw disk volumes attached to individual VMs for operating systems and database data directories.
+3. **File Storage (EFS / Azure Files / Filestore)**: Managed Network File System (NFS/SMB) allowing concurrent read/write across multiple virtual machines.`
+                },
+                {
+                    heading: "Relational (SQL) vs Distributed (NoSQL)",
+                    content: `- **Relational**: ACID compliance, structured schemas (PostgreSQL, MySQL, SQL Server). Best for financial transactions and complex joins.
+- **NoSQL (DynamoDB / Cosmos DB / Firestore)**: Key-value and document stores with single-digit millisecond latency at horizontal scale. Best for high-write gaming leaderboards, real-time sessions, and IoT telemetry.`
+                }
+            ]
+        },
+
+        "kubernetes-and-serverless": {
+            id: "kubernetes-and-serverless",
+            title: "Kubernetes (EKS vs AKS vs GKE) & Serverless Compared",
+            category: "Containers & Cloud-Native",
+            difficulty: "Advanced",
+            tags: ["Kubernetes", "EKS", "AKS", "GKE", "Serverless", "Lambda", "Cloud Run"],
+            summary: "Detailed comparison of managed Kubernetes engines and serverless compute models across AWS, Azure, and GCP.",
+            sections: [
+                {
+                    heading: "Kubernetes Comparison: EKS vs AKS vs GKE",
+                    content: `| Dimension | AWS EKS | Azure AKS | Google Cloud GKE |
+| :--- | :--- | :--- | :--- |
+| **Control Plane Fee** | $0.10/hour (~$73/month) per cluster | **Free** (Standard tier has optional uptime SLA) | 1 free cluster per billing account, then $0.10/hr |
+| **Ease of Setup** | Complex (Requires VPC CNI & IAM OIDC mapping) | Moderate (Clean portal integration) | **Easiest** (Fastest provisioning & GKE Autopilot) |
+| **Upgrades & Patching** | Semi-automated (Manual worker node rollover) | Automated node image upgrades | **Fully Automated** (Release channels) |
+| **Verdict** | Best for deep AWS IAM & VPC integration | Best for enterprise Active Directory & Windows pods | **Industry Benchmark** for Kubernetes excellence |`
+                },
+                {
+                    heading: "Serverless Comparison: Lambda vs Azure Functions vs Cloud Run",
+                    content: `- **AWS Lambda**: The pioneer of serverless Functions-as-a-Service (FaaS). Granular memory configuration (128MB to 10GB) with 15-minute execution limit.
+- **Azure Functions**: Excellent bindings for Azure services (Event Hubs, Cosmos DB) with consumption and dedicated App Service plans.
+- **Google Cloud Run**: Bridges the gap between serverless and containers. Accepts any container image listening on an HTTP port, scales to zero, and allows handling concurrent requests per container instance (unlike Lambda's single-concurrency model).`
+                }
+            ]
+        },
+
+        "cloud-networking-and-security": {
+            id: "cloud-networking-and-security",
+            title: "Cloud Networking, IAM & Zero Trust Security",
+            category: "Security & Networking",
+            difficulty: "Advanced",
+            tags: ["VPC", "Networking", "IAM", "Zero Trust", "Security"],
+            summary: "Understanding Virtual Private Clouds, Subnet segmentation, Security Groups, Identity & Access Management, and the Shared Responsibility Model.",
+            sections: [
+                {
+                    heading: "Cloud Virtual Networking (VPC)",
+                    content: `A **Virtual Private Cloud (VPC)** isolates an organization's cloud resources in a private software-defined network:
+- **Public Subnets**: Contain internet-facing components (Application Load Balancers, NAT Gateways).
+- **Private Subnets**: Contain sensitive application backend servers and databases with no direct public IP routes.
+- **GCP Difference**: GCP VPCs are **Global** across all regions by default, whereas AWS VPCs and Azure VNets are **Regional**.`
+                },
+                {
+                    heading: "The Shared Responsibility Model",
+                    content: `- **Security OF the Cloud (Provider Responsibility)**: Physical data center security, hardware maintenance, network virtualization isolation, hypervisor patching.
+- **Security IN the Cloud (Customer Responsibility)**: Operating system updates (for IaaS VMs), firewall/security group rules, IAM user permissions, database encryption, customer data backups.`
+                }
+            ]
+        },
+
+        "architecture-cost-case-study": {
+            id: "architecture-cost-case-study",
+            title: "Architecture Cost Case Study: Web API Deployment",
+            category: "Cloud Economics & Architecture",
+            difficulty: "Intermediate",
+            tags: ["Case Study", "Architecture", "Cost Estimation", "Django API"],
+            summary: "Modeling a production web API architecture (Frontend + Django REST API + Database + S3 Storage + Load Balancer) across AWS, Azure, and GCP.",
+            sections: [
+                {
+                    heading: "The Target Production Architecture",
+                    content: `To illustrate real-world cost evaluation, consider deploying our **Prushal Technology Contact API**:
+- **Traffic Profile**: ~100,000 monthly requests, 50GB data transfer egress.
+- **Components**:
+  1. Frontend Static Assets / Docs (S3 / Blob / GCS + CDN)
+  2. Backend Python/Django API (2x Container instances / VMs for high availability)
+  3. Managed PostgreSQL Database (db.t4g.small / B2s / db-custom-2-4096)
+  4. Object Storage (Logo & user attachments, ~10GB)
+  5. Application Load Balancer with SSL termination`
+                },
+                {
+                    heading: "Estimated Baseline Cost Breakdown (US / India Regions)",
+                    content: `| Component | AWS Solution & Est. Cost | Azure Solution & Est. Cost | GCP Solution & Est. Cost |
+| :--- | :--- | :--- | :--- |
+| **API Compute** | 2x App Runner / Fargate (~$30/mo) | 2x Azure Container Apps (~$28/mo) | 2x Cloud Run (~$15 - $25/mo) |
+| **Managed DB** | RDS PostgreSQL db.t4g.micro (~$18/mo) | Azure Flexible Server B1ms (~$19/mo) | Cloud SQL db-f1-micro (~$17/mo) |
+| **Load Balancer** | ALB (~$22/mo base + LCU) | Application Gateway (~$25/mo) | Cloud Load Balancer (~$18/mo) |
+| **Static & Docs** | S3 + CloudFront (~$2/mo) | Blob + Azure CDN (~$2/mo) | GCS + Cloud CDN (~$2/mo) |
+| **Data Egress** | 50GB Egress (~$4.50/mo) | 50GB Egress (~$4.35/mo) | 50GB Egress (~$4.25/mo) |
+| **Total Approx.** | **~$76.50 / month** | **~$78.35 / month** | **~$66.25 / month** |
+
+*Note: Estimates represent base non-committed on-demand pricing in us-east/ap-south regions without enterprise discounts. Actual bills vary based on precise execution metrics.*`
+                }
+            ]
+        },
+
+        "beginner-and-career-perspective": {
+            id: "beginner-and-career-perspective",
+            title: "Beginner Roadmap & Career Perspectives in Cloud",
+            category: "Career & Learning",
+            difficulty: "Beginner",
+            tags: ["Career", "Learning Path", "Certifications", "DevOps"],
+            summary: "Which cloud should a beginner learn first, how core architectural skills transfer between providers, and role-specific cloud recommendations.",
+            sections: [
+                {
+                    heading: "If I am a Beginner, Which Cloud Should I Learn First?",
+                    content: `A beginner should choose based on career objective rather than hype:
+- **Choose AWS first** if you want the largest number of job openings globally and want to master granular infrastructure fundamentals.
+- **Choose Azure first** if you are targeting corporate IT, banks, government enterprises, or already work in a .NET/C# environment.
+- **Choose GCP first** if your passion is Data Engineering, Big Data analytics, AI/Machine Learning, or modern containerized startups.`
+                },
+                {
+                    heading: "Transferable Core Architectural Concepts",
+                    content: `Over **80% of cloud engineering knowledge is completely transferable**. Once you understand:
+- How **VPC subnets and routing tables** work in AWS, Azure VNets and GCP VPCs use the exact same networking primitives.
+- How **IAM roles, policies, and least-privilege principles** function, you can write security rules anywhere.
+- How **Docker containers and Kubernetes** operate, your deployment manifests run identically on EKS, AKS, and GKE.
+- How **Terraform** provisions infrastructure, you can manage all three clouds with a single declarative workflow.`
                 }
             ]
         }
@@ -706,6 +831,7 @@ Introducing Celery prematurely requires running a Redis server daemon, configuri
             name: "Prushal Technology Contact API + SMTP System",
             company: "Prushal Technology Pvt. Ltd.",
             status: "Implemented & Tested",
+            category: "Backend & Web API",
             description: "A production-grade Django 6.1 and Django REST Framework contact-form API that validates incoming customer enquiries, stores records in SQLite, and dispatches branded, responsive HTML transactional emails with CID logo embedding and plain-text fallbacks.",
             technologies: ["Python 3.13", "Django 6.1", "Django REST Framework", "SQLite", "SMTP / TLS", "EmailMultiAlternatives", "MIMEImage", "Postman"],
             liveEndpoint: "http://127.0.0.1:8000/api/messages/",
@@ -733,6 +859,31 @@ Introducing Celery prematurely requires running a Redis server daemon, configuri
                 "Production database migration (PostgreSQL / MySQL)",
                 "Email open & delivery tracking telemetry"
             ]
+        },
+        {
+            id: "cloud-platform-evaluation",
+            name: "Cloud Platform Evaluation & Architectural Benchmarks",
+            company: "Research & Engineering",
+            status: "Completed / Research",
+            category: "Cloud Computing",
+            description: "A comprehensive comparative study evaluating AWS, Microsoft Azure, and Google Cloud Platform across pricing structures, 26 functional service categories, Kubernetes orchestration, serverless execution, and multi-cloud architectural patterns.",
+            technologies: ["AWS", "Microsoft Azure", "Google Cloud Platform", "Kubernetes", "FinOps", "Cloud Security", "Terraform"],
+            website: "https://aws.amazon.com/ | https://azure.microsoft.com/ | https://cloud.google.com/",
+            implementedFeatures: [
+                "3-Level Cloud Decision Framework (Quick Decision, 26-Row Matrix, Cost Study)",
+                "Pricing model analysis: On-Demand, Savings Plans, Committed Use, Spot Instances",
+                "Kubernetes deep-dive: AWS EKS vs Azure AKS vs Google GKE",
+                "Serverless compute evaluation: AWS Lambda vs Azure Functions vs Google Cloud Run",
+                "Cloud networking, VPC isolation, and data egress cost modeling",
+                "IAM and Zero Trust enterprise security matrix",
+                "Real-world Web API deployment cost model across all 3 providers",
+                "Beginner learning pathways and career skill transferability framework"
+            ],
+            futureRoadmap: [
+                "Automated Terraform multi-cloud benchmark deployment scripts",
+                "Live cloud cost calculator widget integration",
+                "Continuous FinOps cost optimization playbooks"
+            ]
         }
     ],
 
@@ -745,7 +896,7 @@ Introducing Celery prematurely requires running a Redis server daemon, configuri
             title: "RuntimeError: Model Class Missing Explicit app_label",
             errorString: "RuntimeError: Model class messages.models.ContactMessage doesn't declare an explicit app_label and isn't in an application in INSTALLED_APPS.",
             category: "Django App Registration",
-            cause: "The Django application containing the ContactMessage model was either not listed in settings.py's INSTALLED_APPS, or was registered with an mismatched module path.",
+            cause: "The Django application containing the ContactMessage model was not listed in settings.py's INSTALLED_APPS.",
             solution: "Explicitly added 'contact' to INSTALLED_APPS in config/settings.py and verified that contact/apps.py defined ContactConfig with name = 'contact'.",
             prevention: "Always register every new Django app in settings.py immediately after running python manage.py startapp <app_name>."
         },
@@ -756,52 +907,25 @@ Introducing Celery prematurely requires running a Redis server daemon, configuri
             category: "Namespace Collision",
             cause: "Attempting to name the custom contact app 'messages' conflicted with Django's built-in framework app 'django.contrib.messages'.",
             solution: "Renamed the application folder and app label from 'messages' to 'contact', eliminating the namespace collision.",
-            prevention: "Avoid naming custom applications after built-in Django apps (e.g., auth, messages, sessions, admin, contenttypes)."
+            prevention: "Avoid naming custom applications after built-in Django apps (auth, messages, sessions, admin, contenttypes)."
         },
         {
             id: "error-3",
-            title: "ModuleNotFoundError: No module named 'messages'",
-            errorString: "ModuleNotFoundError: No module named 'messages'",
-            category: "Import Resolution",
-            cause: "After renaming the app to 'contact', lingering import statements in views.py or urls.py still referenced 'from messages.models import ContactMessage'.",
-            solution: "Updated all import statements to use relative imports (from .models import ContactMessage) or absolute 'contact' paths.",
-            prevention: "Use relative imports inside Django app modules to make apps portable and resilient to directory renaming."
+            title: "Broken Logo Image in Gmail & Outlook Inboxes",
+            errorString: "Email client renders broken image placeholder instead of company branding logo.",
+            category: "Email Client Rendering",
+            cause: "Using a third-party hosted Bing CDN URL failed due to hotlinking restrictions, referer header mismatch, and Gmail image proxy caching.",
+            solution: "Placed the official prushal-logo.webp in contact/static/contact/images/ and attached it as an inline MIMEImage using Content-ID (<prushal-logo>), referenced in HTML as <img src='cid:prushal-logo'>.",
+            prevention: "Never rely on unverified third-party image CDNs for transactional emails; always use CID embedding or dedicated company-owned HTTPS assets."
         },
         {
             id: "error-4",
-            title: "NameError: name 'send_mail' is not defined",
-            errorString: "NameError: name 'send_mail' is not defined",
-            category: "Refactoring Artifact",
-            cause: "During service layer refactoring, the send_mail import was removed from views.py, but an orphaned call to send_mail() remained in the POST handler.",
-            solution: "Removed the direct send_mail() call from views.py and replaced it with the unified send_contact_emails(contact_message) service function.",
-            prevention: "Always run python manage.py check or automated test suites immediately after refactoring views."
-        },
-        {
-            id: "error-5",
-            title: "NameError: name 'ADMIN_EMAIL' is not defined",
-            errorString: "NameError: name 'ADMIN_EMAIL' is not defined",
-            category: "Settings Configuration",
-            cause: "The email service referenced settings.ADMIN_EMAIL, which had not been defined in config/settings.py.",
-            solution: "Updated the service to safely fallback to getattr(settings, 'ADMIN_EMAIL', settings.DEFAULT_FROM_EMAIL).",
-            prevention: "Use getattr(settings, 'SETTING_NAME', default_value) when accessing optional configuration variables."
-        },
-        {
-            id: "error-6",
-            title: "NameError: name 'logger' is not defined",
-            errorString: "NameError: name 'logger' is not defined",
-            category: "Logging Initialization",
-            cause: "logger.exception() was invoked inside an error handler before initializing the logger object.",
-            solution: "Added logger = logging.getLogger(__name__) at the top of contact/services/email_service.py.",
-            prevention: "Declare module-level loggers immediately below the import block in every Python module."
-        },
-        {
-            id: "error-7",
-            title: "Broken Logo Image Icon in Gmail & Outlook Inboxes",
-            errorString: "Email client renders broken image placeholder instead of company branding logo.",
-            category: "Email Client Rendering",
-            cause: "Using a third-party hosted Bing CDN URL (https://th.bing.com/...) failed due to hotlinking restrictions, referer header mismatch, and Gmail image proxy caching.",
-            solution: "Placed the official prushal-logo.webp in contact/static/contact/images/ and attached it as an inline MIMEImage using Content-ID (<prushal-logo>), referenced in HTML as <img src='cid:prushal-logo'>.",
-            prevention: "Never rely on unverified third-party image CDNs for transactional emails; always use CID embedding or dedicated company-owned HTTPS assets."
+            title: "Cloud Misconfiguration: Unexpected Inter-AZ Data Transfer Costs",
+            errorString: "Unexpected high networking costs incurred from cross-Availability Zone communication.",
+            category: "Cloud Networking & FinOps",
+            cause: "Deploying API servers in us-east-1a and database instances in us-east-1b without considering that inter-AZ traffic incurs ~$0.01/GB in both directions.",
+            solution: "Co-located primary application compute instances in the same Availability Zone as the primary database, reserving secondary AZs strictly for standby replication failovers.",
+            prevention: "Always architect VPC subnet placement intentionally and model inter-AZ data flow during initial design."
         }
     ],
 

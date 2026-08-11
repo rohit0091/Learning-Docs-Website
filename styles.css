@@ -75,9 +75,7 @@
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
 }
 
-/* ==========================================================================
-   Global Reset & Base Typography
-   ========================================================================== */
+/* Base Reset & Typography */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -112,9 +110,7 @@ button {
     background: none;
 }
 
-/* ==========================================================================
-   Header & Top Navbar
-   ========================================================================== */
+/* Header & Top Navbar */
 .header {
     position: sticky;
     top: 0;
@@ -213,9 +209,7 @@ button {
     border-color: var(--border-strong);
 }
 
-/* ==========================================================================
-   Main App Layout (Sidebar + Content)
-   ========================================================================== */
+/* App Layout */
 .app-layout {
     max-width: 1440px;
     margin: 0 auto;
@@ -305,9 +299,7 @@ button {
     overflow-y: auto;
 }
 
-/* ==========================================================================
-   Section Views & Cards
-   ========================================================================== */
+/* Section Views */
 .section-view {
     display: none;
 }
@@ -338,9 +330,7 @@ button {
     color: var(--text-muted);
 }
 
-/* ==========================================================================
-   1. Calendar View & Gregorian Grid
-   ========================================================================== */
+/* 1. Calendar View */
 .calendar-card {
     background-color: var(--surface);
     border: 1px solid var(--border);
@@ -550,15 +540,13 @@ button {
     letter-spacing: 0.5px;
 }
 
-/* ==========================================================================
-   Hover Preview Tooltip (Desktop)
-   ========================================================================== */
+/* Hover Preview Tooltip (Desktop) */
 .hover-preview-card {
     position: absolute;
     bottom: 105%;
     left: 50%;
     transform: translateX(-50%);
-    width: 250px;
+    width: 260px;
     background-color: var(--surface);
     border: 1px solid var(--border-strong);
     border-radius: 10px;
@@ -622,9 +610,7 @@ button {
     text-align: right;
 }
 
-/* ==========================================================================
-   Monthly Summary Section
-   ========================================================================== */
+/* Monthly Summary Section */
 .monthly-summary-card {
     background-color: var(--surface);
     border: 1px solid var(--border);
@@ -664,9 +650,7 @@ button {
     gap: 0.5rem;
 }
 
-/* ==========================================================================
-   2. Daily Report Drawer / Modal
-   ========================================================================== */
+/* 2. Daily Report Drawer / Modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -776,7 +760,6 @@ button {
     line-height: 1.6;
 }
 
-/* Tasks Checklist */
 .tasks-checklist {
     list-style: none;
     display: flex;
@@ -801,7 +784,6 @@ button {
     font-weight: bold;
 }
 
-/* Tech Badges */
 .tech-badge-group {
     display: flex;
     flex-wrap: wrap;
@@ -818,7 +800,6 @@ button {
     color: var(--text-muted);
 }
 
-/* Clickable Topic Cards inside Daily View */
 .daily-topic-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -861,7 +842,6 @@ button {
     gap: 0.3rem;
 }
 
-/* Problems & Solutions */
 .problem-card {
     background-color: var(--surface-alt);
     border: 1px solid var(--border);
@@ -896,7 +876,6 @@ button {
     font-weight: 500;
 }
 
-/* Timeline */
 .report-timeline {
     position: relative;
     padding-left: 1.5rem;
@@ -939,9 +918,7 @@ button {
     margin-right: 0.5rem;
 }
 
-/* ==========================================================================
-   3. Deep Knowledge Base Article Reader (Layer 3)
-   ========================================================================== */
+/* 3. Deep Knowledge Base Article Reader */
 .knowledge-layout {
     display: flex;
     gap: 2rem;
@@ -1069,57 +1046,6 @@ button {
     margin-bottom: 1rem;
 }
 
-/* Callout Alert Boxes */
-.callout-box {
-    border-radius: 10px;
-    padding: 1.25rem;
-    margin: 1.5rem 0;
-    display: flex;
-    gap: 0.85rem;
-    align-items: flex-start;
-}
-
-.callout-box.info {
-    background-color: var(--primary-light);
-    border: 1px solid var(--primary-border);
-    color: var(--text-main);
-}
-
-.callout-box.success {
-    background-color: var(--success-bg);
-    border: 1px solid var(--success-border);
-    color: var(--text-main);
-}
-
-.callout-box.warning {
-    background-color: var(--warning-bg);
-    border: 1px solid var(--warning-border);
-    color: var(--text-main);
-}
-
-.callout-box.danger {
-    background-color: var(--danger-bg);
-    border: 1px solid var(--danger-border);
-    color: var(--text-main);
-}
-
-.callout-icon {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.callout-content h5 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-}
-
-.callout-content p {
-    font-size: 0.88rem;
-    line-height: 1.5;
-}
-
-/* Code Blocks & Copy Snippets */
 .code-block-container {
     background-color: #0d1117;
     border: 1px solid #30363d;
@@ -1176,7 +1102,6 @@ pre.code-content {
     line-height: 1.6;
 }
 
-/* Tables inside Documentation */
 .doc-table {
     width: 100%;
     border-collapse: collapse;
@@ -1199,9 +1124,7 @@ pre.code-content {
     color: var(--text-main);
 }
 
-/* ==========================================================================
-   4. Errors & Post-Mortems View
-   ========================================================================== */
+/* 4. Errors & Post-Mortems View */
 .errors-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -1268,9 +1191,7 @@ pre.code-content {
     line-height: 1.5;
 }
 
-/* ==========================================================================
-   5. Projects Showcase View
-   ========================================================================== */
+/* 5. Projects Showcase View */
 .project-hero-card {
     background-color: var(--surface);
     border: 1px solid var(--border);
@@ -1354,9 +1275,7 @@ pre.code-content {
     line-height: 1.4;
 }
 
-/* ==========================================================================
-   6. Statistics Dashboard View
-   ========================================================================== */
+/* 6. Statistics Dashboard View */
 .stats-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1401,9 +1320,7 @@ pre.code-content {
     color: var(--text-muted);
 }
 
-/* ==========================================================================
-   7. Global Search Modal
-   ========================================================================== */
+/* 7. Global Search Modal */
 .search-modal-overlay {
     position: fixed;
     top: 0;
@@ -1491,9 +1408,7 @@ pre.code-content {
     color: var(--text-muted);
 }
 
-/* ==========================================================================
-   Responsive Breakpoints
-   ========================================================================== */
+/* Responsive Breakpoints */
 @media (max-width: 1024px) {
     .sidebar {
         width: 220px;
