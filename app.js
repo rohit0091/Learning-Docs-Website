@@ -1,0 +1,662 @@
+/**
+ * Technical Learning & Daily Work Documentation Application Logic
+ * Prushal Technology Pvt. Ltd.
+ */
+
+// State Management
+const state = {
+    currentYear: 2026,
+    currentMonth: 7, // 0-indexed: 7 is August
+    activeView: "calendar-view",
+    activeTopicId: "django-architecture",
+    theme: localStorage.getItem("prushal_docs_theme") || "light"
+};
+
+// Initialize Application
+document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
+    initNavigation();
+    initCalendarControls();
+    renderCalendar(state.currentYear, state.currentMonth);
+    renderKnowledgeSidebar();
+    renderTopicArticle(state.activeTopicId);
+    renderErrorsList();
+    renderProjectsList();
+    renderTestingChecklist();
+    renderStatistics();
+    initSearch();
+    initKeyboardShortcuts();
+});
+
+// =============================================================================
+// Theme Handling
+// =============================================================================
+function initTheme() {
+    document.documentElement.setAttribute("data-theme", state.theme);
+    updateThemeIcon();
+
+    const toggleBtn = document.getElementById("themeToggleBtn");
+    if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            state.theme = state.theme === "light" ? "dark" : "light";
+            document.documentElement.setAttribute("data-theme", state.theme);
+            localStorage.setItem("prushal_docs_theme", state.theme);
+            updateThemeIcon();
+        });
+    }
+}
+
+function updateThemeIcon() {
+    const toggleBtn = document.getElementById("themeToggleBtn");
+    if (toggleBtn) {
+        toggleBtn.innerHTML = state.theme === "dark" ? "☀️" : "🌙";
+        toggleBtn.setAttribute("title", `Switch to ${state.theme === 'dark' ? 'Light' : 'Dark'} Mode`);
+    }
+}
+
+// =============================================================================
+// View Navigation
+// =============================================================================
+function initNavigation() {
+    const navButtons = document.querySelectorAll(".nav-item-btn");
+    navButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const targetView = btn.getAttribute("data-view");
+            if (targetView) {
+                switchView(targetView);
+            }
+        });
+    });
+}
+
+function switchView(viewId) {
+    state.activeView = viewId;
+
+    // Update Sidebar Active Button
+    document.querySelectorAll(".nav-item-btn").forEach(btn => {
+        if (btn.getAttribute("data-view") === viewId) {
+            btn.classList.add("active");
+        } else {
+            btn.classList.remove("active");
+        }
+    });
+
+    // Toggle Section Views
+    document.querySelectorAll(".section-view").forEach(view => {
+        if (view.id === viewId) {
+            view.classList.add("active");
+        } else {
+            view.classList.remove("active");
+        }
+    });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// =============================================================================
+// Calendar Generation (Gregorian Grid starting August 10, 2026)
+// =============================================================================
+const MONTH_NAMES = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
+
+function initCalendarControls() {
+    const prevBtn = document.getElementById("calPrevBtn");
+    const nextBtn = document.getElementById("calNextBtn");
+    const todayBtn = document.getElementById("calTodayBtn");
+    const monthSelect = document.getElementById("monthSelect");
+    const yearSelect = document.getElementById("yearSelect");
+
+    // Populate Month Dropdown
+    if (monthSelect) {
+        monthSelect.innerHTML = MONTH_NAMES.map((m, i) => `<option value="${i}">${m}</option>`).join("");
+        monthSelect.value = state.currentMonth;
+        monthSelect.addEventListener("change", (e) => {
+            state.currentMonth = parseInt(e.target.value);
+            renderCalendar(state.currentYear, state.currentMonth);
+        });
+    }
+
+    // Populate Year Dropdown
+    if (yearSelect) {
+        const years = [2025, 2026, 2027];
+        yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
+        yearSelect.value = state.currentYear;
+        yearSelect.addEventListener("change", (e) => {
+            state.currentYear = parseInt(e.target.value);
+            renderCalendar(state.currentYear, state.currentMonth);
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener("click", () => {
+            state.currentMonth--;
+            if (state.currentMonth < 0) {
+                state.currentMonth = 11;
+                state.currentYear--;
+            }
+            syncDropdowns();
+            renderCalendar(state.currentYear, state.currentMonth);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener("click", () => {
+            state.currentMonth++;
+            if (state.currentMonth > 11) {
+                state.currentMonth = 0;
+                state.currentYear++;
+            }
+            syncDropdowns();
+            renderCalendar(state.currentYear, state.currentMonth);
+        });
+    }
+
+    if (todayBtn) {
+        todayBtn.addEventListener("click", () => {
+            state.currentYear = 2026;
+            state.currentMonth = 7; // August
+            syncDropdowns();
+            renderCalendar(state.currentYear, state.currentMonth);
+        });
+    }
+}
+
+function syncDropdowns() {
+    const monthSelect = document.getElementById("monthSelect");
+    const yearSelect = document.getElementById("yearSelect");
+    if (monthSelect) monthSelect.value = state.currentMonth;
+    if (yearSelect) yearSelect.value = state.currentYear;
+}
+
+function renderCalendar(year, month) {
+    const titleEl = document.getElementById("monthYearTitle");
+    const gridEl = document.getElementById("calendarGrid");
+    if (!gridEl) return;
+
+    if (titleEl) {
+        titleEl.textContent = `${MONTH_NAMES[month]} ${year}`;
+    }
+
+    gridEl.innerHTML = "";
+
+    // Calculate days in month and starting day of week (Monday as day 0)
+    const firstDayIndex = new Date(year, month, 1).getDay(); // 0 is Sunday
+    const startOffset = (firstDayIndex === 0 ? 6 : firstDayIndex - 1); // Shift Sunday to 6, Mon to 0
+    const totalDays = new Date(year, month + 1, 0).getDate();
+
+    // Render preceding empty padding cells
+    for (let i = 0; i < startOffset; i++) {
+        const emptyCell = document.createElement("div");
+        emptyCell.className = "cal-day-cell empty-day";
+        gridEl.appendChild(emptyCell);
+    }
+
+    // Render Month Days
+    for (let day = 1; day <= totalDays; day++) {
+        const dayString = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const journalEntry = DOCS_DATA.journal.find(j => j.date === dayString);
+
+        const dayCell = document.createElement("div");
+        dayCell.className = "cal-day-cell";
+
+        const isToday = (dayString === "2026-08-11");
+        if (isToday) dayCell.classList.add("today");
+
+        const isStartDate = (dayString === "2026-08-10");
+
+        let cellHTML = `<div class="cal-day-number">${day}</div>`;
+
+        if (journalEntry) {
+            dayCell.classList.add("has-work");
+            if (isStartDate) dayCell.classList.add("start-date");
+
+            cellHTML += `
+                <div class="day-badge-stack">
+                    ${isStartDate ? `<div class="day-pill pill-start">★ Start Date</div>` : ''}
+                    <div class="day-pill pill-task">● ${journalEntry.tasks.length} Tasks</div>
+                    <div class="day-pill pill-completed">✓ ${journalEntry.topicsLearned.length} Topics</div>
+                </div>
+
+                <!-- Desktop Hover Preview -->
+                <div class="hover-preview-card">
+                    <div class="preview-header">
+                        <span class="preview-date">${journalEntry.dayOfWeek}, ${MONTH_NAMES[month]} ${day}</span>
+                        <span class="preview-badge">✓ Completed</span>
+                    </div>
+                    <ul class="preview-task-list">
+                        ${journalEntry.tasks.slice(0, 4).map(t => `<li class="preview-task-item">✓ ${t.title}</li>`).join("")}
+                        ${journalEntry.tasks.length > 4 ? `<li class="preview-task-item">+ ${journalEntry.tasks.length - 4} more tasks...</li>` : ''}
+                    </ul>
+                    <div class="preview-footer">Click to open full daily report &rarr;</div>
+                </div>
+            `;
+
+            dayCell.addEventListener("click", () => {
+                openDailyReportModal(journalEntry);
+            });
+        } else {
+            dayCell.addEventListener("click", () => {
+                showEmptyDayNotice(dayString);
+            });
+        }
+
+        dayCell.innerHTML = cellHTML;
+        gridEl.appendChild(dayCell);
+    }
+}
+
+function showEmptyDayNotice(dateStr) {
+    alert(`No documentation recorded for ${dateStr}. Project development began on 10 August 2026.`);
+}
+
+// =============================================================================
+// Daily Report Modal (Layer 2)
+// =============================================================================
+function openDailyReportModal(entry) {
+    const modalOverlay = document.getElementById("dailyReportModal");
+    if (!modalOverlay) return;
+
+    document.getElementById("modalDateBadge").textContent = `${entry.dayOfWeek} &bull; ${entry.date}`;
+    document.getElementById("modalTitle").textContent = entry.title;
+    document.getElementById("modalSummaryText").textContent = entry.summary;
+
+    // Render Tasks
+    const tasksList = document.getElementById("modalTasksList");
+    tasksList.innerHTML = entry.tasks.map(t => `
+        <li class="task-item">
+            <span class="task-check-icon">&#10003;</span>
+            <span>${t.title}</span>
+        </li>
+    `).join("");
+
+    // Render Tech Badges
+    const techGroup = document.getElementById("modalTechGroup");
+    techGroup.innerHTML = entry.technologies.map(t => `
+        <span class="tech-badge">${t}</span>
+    `).join("");
+
+    // Render Clickable Topic Cards
+    const topicCardsGrid = document.getElementById("modalTopicCardsGrid");
+    topicCardsGrid.innerHTML = entry.topicsLearned.map(topicId => {
+        const topic = DOCS_DATA.topics[topicId];
+        if (!topic) return "";
+        return `
+            <div class="topic-jump-card" onclick="jumpToTopic('${topic.id}')">
+                <div class="topic-jump-title">${topic.title}</div>
+                <div class="topic-jump-link">Read Deep Documentation &rarr;</div>
+            </div>
+        `;
+    }).join("");
+
+    // Render Problems & Solutions
+    const problemsContainer = document.getElementById("modalProblemsContainer");
+    if (entry.problems && entry.problems.length > 0) {
+        problemsContainer.innerHTML = entry.problems.map(p => `
+            <div class="problem-card">
+                <div class="problem-header">&#9888; ${p.error}</div>
+                <div class="problem-cause"><strong>Cause:</strong> ${p.cause}</div>
+                <div class="solution-box">&#10004; <strong>Solution:</strong> ${p.solution}</div>
+            </div>
+        `).join("");
+    } else {
+        problemsContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">No major errors encountered during this phase.</p>`;
+    }
+
+    // Render What I Learned
+    const learnedList = document.getElementById("modalLearnedList");
+    learnedList.innerHTML = entry.whatILearned.map(item => `
+        <li style="margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-main);">${item}</li>
+    `).join("");
+
+    // Render Why This Matters
+    const whyMattersEl = document.getElementById("modalWhyMattersText");
+    whyMattersEl.textContent = entry.whyItMatters;
+
+    // Render Timeline
+    const timelineEl = document.getElementById("modalTimelineContainer");
+    timelineEl.innerHTML = entry.timeline.map(t => `
+        <div class="timeline-item">
+            <span class="timeline-time">${t.time}</span>
+            <span class="timeline-text">${t.event}</span>
+        </div>
+    `).join("");
+
+    modalOverlay.classList.add("active");
+}
+
+function closeDailyReportModal() {
+    const modalOverlay = document.getElementById("dailyReportModal");
+    if (modalOverlay) {
+        modalOverlay.classList.remove("active");
+    }
+}
+
+// =============================================================================
+// Deep Knowledge Base (Layer 3)
+// =============================================================================
+function renderKnowledgeSidebar() {
+    const sidebarList = document.getElementById("topicNavList");
+    if (!sidebarList) return;
+
+    sidebarList.innerHTML = Object.values(DOCS_DATA.topics).map(topic => `
+        <li>
+            <button class="topic-nav-btn ${topic.id === state.activeTopicId ? 'active' : ''}" data-topic-id="${topic.id}" onclick="selectTopic('${topic.id}')">
+                <span>${topic.title}</span>
+                <span style="font-size: 0.7rem; color: var(--text-light);">&rsaquo;</span>
+            </button>
+        </li>
+    `).join("");
+}
+
+function selectTopic(topicId) {
+    state.activeTopicId = topicId;
+    renderKnowledgeSidebar();
+    renderTopicArticle(topicId);
+}
+
+function jumpToTopic(topicId) {
+    closeDailyReportModal();
+    switchView("knowledge-view");
+    selectTopic(topicId);
+}
+
+function renderTopicArticle(topicId) {
+    const articleContainer = document.getElementById("topicArticleContent");
+    if (!articleContainer) return;
+
+    const topic = DOCS_DATA.topics[topicId];
+    if (!topic) {
+        articleContainer.innerHTML = `<p>Topic not found.</p>`;
+        return;
+    }
+
+    let html = `
+        <div class="article-header">
+            <div class="article-category">${topic.category} &bull; ${topic.difficulty}</div>
+            <h1 class="article-title">${topic.title}</h1>
+            <div class="article-meta">
+                <span>Tags: ${topic.tags.map(t => `<code>#${t}</code>`).join(" ")}</span>
+            </div>
+        </div>
+
+        <div class="article-summary-lead">
+            ${topic.summary}
+        </div>
+    `;
+
+    topic.sections.forEach(sec => {
+        html += `
+            <div class="article-section">
+                <h2 class="article-section-h2">${sec.heading}</h2>
+                <div class="article-body-text">
+                    ${sec.content.replace(/\n\n/g, "<br><br>").replace(/`([^`]+)`/g, "<code>$1</code>")}
+                </div>
+            </div>
+        `;
+    });
+
+    if (topic.codeExample) {
+        html += `
+            <div class="article-section">
+                <h2 class="article-section-h2">Code Implementation: ${topic.codeExample.title}</h2>
+                <div class="code-block-container">
+                    <div class="code-header">
+                        <span class="code-lang-label">${topic.codeExample.language}</span>
+                        <button class="btn-copy-code" onclick="copyCode(this)">Copy Code</button>
+                    </div>
+                    <pre class="code-content"><code>${escapeHTML(topic.codeExample.code)}</code></pre>
+                </div>
+            </div>
+        `;
+    }
+
+    articleContainer.innerHTML = html;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function copyCode(btn) {
+    const pre = btn.closest(".code-block-container").querySelector("pre code");
+    if (!pre) return;
+
+    navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = "Copied!";
+        btn.classList.add("copied");
+        setTimeout(() => {
+            btn.textContent = "Copy Code";
+            btn.classList.remove("copied");
+        }, 2000);
+    });
+}
+
+// =============================================================================
+// Errors & Post-Mortems View
+// =============================================================================
+function renderErrorsList() {
+    const container = document.getElementById("errorsListContainer");
+    if (!container) return;
+
+    container.innerHTML = DOCS_DATA.errors.map(err => `
+        <div class="error-postmortem-card">
+            <div class="error-badge-tag">${err.category}</div>
+            <h3 class="error-card-title">${err.title}</h3>
+            <div class="error-raw-box">${escapeHTML(err.errorString)}</div>
+            <div class="error-detail-block">
+                <div class="detail-col">
+                    <h6>Root Cause</h6>
+                    <p>${err.cause}</p>
+                </div>
+                <div class="detail-col">
+                    <h6>Verified Solution</h6>
+                    <p style="color: var(--success); font-weight: 500;">${err.solution}</p>
+                </div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-light); border-top: 1px dashed var(--border); padding-top: 0.5rem;">
+                <strong>Prevention:</strong> ${err.prevention}
+            </div>
+        </div>
+    `).join("");
+}
+
+// =============================================================================
+// Projects Showcase View
+// =============================================================================
+function renderProjectsList() {
+    const container = document.getElementById("projectsListContainer");
+    if (!container) return;
+
+    const project = DOCS_DATA.projects[0];
+    container.innerHTML = `
+        <div class="project-hero-card">
+            <div class="project-tag-status">✓ ${project.status}</div>
+            <h2 class="project-hero-title">${project.name}</h2>
+            <p class="project-hero-desc">${project.description}</p>
+            <div class="tech-badge-group" style="margin-bottom: 1.5rem;">
+                ${project.technologies.map(t => `<span class="tech-badge">${t}</span>`).join("")}
+            </div>
+            
+            <div class="features-matrix-grid">
+                <div class="matrix-col">
+                    <div class="matrix-title implemented">
+                        <span>&#10004;</span> Currently Implemented (Verified)
+                    </div>
+                    <ul class="matrix-list">
+                        ${project.implementedFeatures.map(f => `<li><span style="color: var(--success);">&#10003;</span> ${f}</li>`).join("")}
+                    </ul>
+                </div>
+
+                <div class="matrix-col">
+                    <div class="matrix-title future">
+                        <span>&#9881;</span> Planned Future Improvements
+                    </div>
+                    <ul class="matrix-list">
+                        ${project.futureRoadmap.map(f => `<li><span style="color: var(--warning);">&#9675;</span> ${f}</li>`).join("")}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// =============================================================================
+// Testing Checklist View
+// =============================================================================
+function renderTestingChecklist() {
+    const tableBody = document.getElementById("testingTableBody");
+    if (!tableBody) return;
+
+    tableBody.innerHTML = DOCS_DATA.testingChecklist.map(t => `
+        <tr>
+            <td><strong>#${t.id}</strong></td>
+            <td><strong>${t.label}</strong></td>
+            <td><code>${t.command || t.endpoint || t.trigger || t.query || t.client || t.condition}</code></td>
+            <td>${t.expected}</td>
+            <td><span class="day-pill pill-completed">&#10003; ${t.status}</span></td>
+        </tr>
+    `).join("");
+}
+
+// =============================================================================
+// Statistics Dashboard View
+// =============================================================================
+function renderStatistics() {
+    const totalDaysEl = document.getElementById("statTotalDays");
+    const totalTasksEl = document.getElementById("statTotalTasks");
+    const totalTopicsEl = document.getElementById("statTotalTopics");
+    const totalProjectsEl = document.getElementById("statTotalProjects");
+    const totalTechEl = document.getElementById("statTotalTech");
+
+    if (totalDaysEl) totalDaysEl.textContent = DOCS_DATA.journal.length;
+    
+    const totalTasks = DOCS_DATA.journal.reduce((acc, j) => acc + j.tasks.length, 0);
+    if (totalTasksEl) totalTasksEl.textContent = totalTasks;
+
+    if (totalTopicsEl) totalTopicsEl.textContent = Object.keys(DOCS_DATA.topics).length;
+    if (totalProjectsEl) totalProjectsEl.textContent = DOCS_DATA.projects.length;
+
+    const allTech = new Set();
+    DOCS_DATA.journal.forEach(j => j.technologies.forEach(t => allTech.add(t)));
+    if (totalTechEl) totalTechEl.textContent = allTech.size;
+}
+
+// =============================================================================
+// Global Search Modal
+// =============================================================================
+function initSearch() {
+    const searchTrigger = document.getElementById("searchTriggerBtn");
+    const searchModal = document.getElementById("searchModal");
+    const searchInput = document.getElementById("globalSearchInput");
+    const searchResults = document.getElementById("searchResultsList");
+
+    if (searchTrigger && searchModal) {
+        searchTrigger.addEventListener("click", () => {
+            searchModal.classList.add("active");
+            if (searchInput) searchInput.focus();
+        });
+
+        searchModal.addEventListener("click", (e) => {
+            if (e.target === searchModal) {
+                searchModal.classList.remove("active");
+            }
+        });
+    }
+
+    if (searchInput && searchResults) {
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            if (!query) {
+                searchResults.innerHTML = `<p style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">Type keywords like 'SMTP', 'Serializer', 'Logo', 'Postman', 'Error'...</p>`;
+                return;
+            }
+
+            const results = [];
+
+            // Search Topics
+            Object.values(DOCS_DATA.topics).forEach(topic => {
+                if (topic.title.toLowerCase().includes(query) || topic.summary.toLowerCase().includes(query)) {
+                    results.push({
+                        type: "Knowledge Topic",
+                        title: topic.title,
+                        snippet: topic.summary,
+                        action: () => {
+                            searchModal.classList.remove("active");
+                            jumpToTopic(topic.id);
+                        }
+                    });
+                }
+            });
+
+            // Search Journal Days
+            DOCS_DATA.journal.forEach(j => {
+                if (j.title.toLowerCase().includes(query) || j.summary.toLowerCase().includes(query) || j.date.includes(query)) {
+                    results.push({
+                        type: `Daily Log (${j.date})`,
+                        title: j.title,
+                        snippet: j.summary,
+                        action: () => {
+                            searchModal.classList.remove("active");
+                            switchView("calendar-view");
+                            openDailyReportModal(j);
+                        }
+                    });
+                }
+            });
+
+            // Search Errors
+            DOCS_DATA.errors.forEach(err => {
+                if (err.title.toLowerCase().includes(query) || err.errorString.toLowerCase().includes(query)) {
+                    results.push({
+                        type: "Error Post-Mortem",
+                        title: err.title,
+                        snippet: err.cause,
+                        action: () => {
+                            searchModal.classList.remove("active");
+                            switchView("errors-view");
+                        }
+                    });
+                }
+            });
+
+            if (results.length === 0) {
+                searchResults.innerHTML = `<p style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">No results found for "${query}".</p>`;
+            } else {
+                searchResults.innerHTML = results.map((r, idx) => `
+                    <div class="search-result-item" data-res-idx="${idx}">
+                        <div class="search-result-type">${r.type}</div>
+                        <div class="search-result-title">${r.title}</div>
+                        <div class="search-result-snippet">${r.snippet}</div>
+                    </div>
+                `).join("");
+
+                searchResults.querySelectorAll(".search-result-item").forEach((el, idx) => {
+                    el.addEventListener("click", () => results[idx].action());
+                });
+            }
+        });
+    }
+}
+
+function initKeyboardShortcuts() {
+    document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+            e.preventDefault();
+            const searchModal = document.getElementById("searchModal");
+            const searchInput = document.getElementById("globalSearchInput");
+            if (searchModal) {
+                searchModal.classList.add("active");
+                if (searchInput) searchInput.focus();
+            }
+        }
+        if (e.key === "Escape") {
+            const searchModal = document.getElementById("searchModal");
+            const dailyModal = document.getElementById("dailyReportModal");
+            if (searchModal) searchModal.classList.remove("active");
+            if (dailyModal) dailyModal.classList.remove("active");
+        }
+    });
+}
