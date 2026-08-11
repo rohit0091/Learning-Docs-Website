@@ -8,7 +8,7 @@ const state = {
     currentYear: 2026,
     currentMonth: 7, // 0-indexed: 7 is August
     activeView: "calendar-view",
-    activeTopicId: "aws-vs-azure-vs-gcp",
+    activeTopicId: "django-architecture",
     activeCategoryFilter: "all",
     theme: localStorage.getItem("prushal_docs_theme") || "light"
 };
@@ -92,6 +92,177 @@ function switchView(viewId) {
     });
 
     window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// =============================================================================
+// Robust Markdown & Technical Architecture Parser
+// =============================================================================
+function renderMarkdown(md) {
+    if (!md) return "";
+
+    // 1. Extract Fenced Code Blocks first to protect formatting
+    const codeBlocks = [];
+    let processed = md.replace(/```([a-zA-Z0-9_-]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+        const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+        const cleanLang = lang.trim() || "text";
+        codeBlocks.push(`
+            <div class="code-block-container">
+                <div class="code-header">
+                    <span class="code-lang-label">${cleanLang}</span>
+                    <button class="btn-copy-code" onclick="copyCode(this)">Copy Code</button>
+                </div>
+                <pre class="code-content"><code>${escapeHTML(code.trim())}</code></pre>
+            </div>
+        `);
+        return placeholder;
+    });
+
+    // 2. Parse Markdown Tables
+    const tableRegex = /((?:\|[^\n]+\|\n?)+)/g;
+    processed = processed.replace(tableRegex, (match) => {
+        const lines = match.trim().split("\n").map(l => l.trim()).filter(l => l.length > 0);
+        if (lines.length < 2) return match;
+
+        // Check if second line is divider (e.g. |---|---|)
+        const isDivider = /^\|[\s-:]+\|/.test(lines[1]);
+        if (!isDivider) return match;
+
+        const headers = lines[0].split("|").filter((c, i, arr) => i > 0 && i < arr.length - 1).map(c => c.trim());
+        const rowLines = lines.slice(2);
+
+        let tableHTML = `<div class="table-responsive"><table class="doc-table"><thead><tr>`;
+        headers.forEach(h => {
+            tableHTML += `<th>${formatInlineMarkdown(h)}</th>`;
+        });
+        tableHTML += `</tr></thead><tbody>`;
+
+        rowLines.forEach(row => {
+            const cells = row.split("|").filter((c, i, arr) => i > 0 && i < arr.length - 1).map(c => c.trim());
+            tableHTML += `<tr>`;
+            cells.forEach(cell => {
+                tableHTML += `<td>${formatInlineMarkdown(cell)}</td>`;
+            });
+            tableHTML += `</tr>`;
+        });
+
+        tableHTML += `</tbody></table></div>`;
+        return tableHTML;
+    });
+
+    // 3. Process Block Elements (Headings, Lists, Callouts, Paragraphs)
+    const blocks = processed.split(/\n{2,}/);
+    const renderedBlocks = blocks.map(block => {
+        const trimmed = block.trim();
+        if (!trimmed) return "";
+
+        // Return preserved Code Blocks
+        if (trimmed.startsWith("__CODE_BLOCK_") && trimmed.endsWith("__")) {
+            const index = parseInt(trimmed.replace("__CODE_BLOCK_", "").replace("__", ""));
+            return codeBlocks[index] || "";
+        }
+
+        // Return preserved Tables
+        if (trimmed.startsWith("<div class=\"table-responsive\">")) {
+            return trimmed;
+        }
+
+        // Subheadings
+        if (trimmed.startsWith("#### ")) {
+            return `<h4 class="article-section-h4">${formatInlineMarkdown(trimmed.substring(5))}</h4>`;
+        }
+        if (trimmed.startsWith("### ")) {
+            return `<h3 class="article-section-h3">${formatInlineMarkdown(trimmed.substring(4))}</h3>`;
+        }
+        if (trimmed.startsWith("## ")) {
+            return `<h2 class="article-section-h2">${formatInlineMarkdown(trimmed.substring(3))}</h2>`;
+        }
+
+        // Callouts (> [!IMPORTANT] / > [!NOTE])
+        if (trimmed.startsWith("> ")) {
+            let calloutType = "info";
+            let calloutTitle = "Note";
+            let content = trimmed.substring(2);
+
+            if (content.startsWith("[!IMPORTANT]")) {
+                calloutType = "warning";
+                calloutTitle = "Important";
+                content = content.replace("[!IMPORTANT]", "").trim();
+            } else if (content.startsWith("[!WARNING]")) {
+                calloutType = "danger";
+                calloutTitle = "Warning";
+                content = content.replace("[!WARNING]", "").trim();
+            } else if (content.startsWith("[!NOTE]")) {
+                calloutType = "info";
+                calloutTitle = "Note";
+                content = content.replace("[!NOTE]", "").trim();
+            } else if (content.startsWith("[!TIP]")) {
+                calloutType = "success";
+                calloutTitle = "Tip";
+                content = content.replace("[!TIP]", "").trim();
+            }
+
+            return `
+                <div class="callout-box ${calloutType}">
+                    <div class="callout-icon">${calloutType === 'warning' ? '⚠️' : (calloutType === 'danger' ? '⛔' : '💡')}</div>
+                    <div class="callout-content">
+                        <h5>${calloutTitle}</h5>
+                        <p>${formatInlineMarkdown(content)}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Bullet Lists (- or *)
+        const lines = trimmed.split("\n");
+        const isBulletList = lines.every(l => l.trim().startsWith("- ") || l.trim().startsWith("* ") || l.trim() === "");
+        if (isBulletList && lines.length > 0) {
+            let listHTML = `<ul class="doc-bullet-list">`;
+            lines.forEach(l => {
+                const itemText = l.trim().replace(/^[-*]\s+/, "");
+                if (itemText) {
+                    listHTML += `<li>${formatInlineMarkdown(itemText)}</li>`;
+                }
+            });
+            listHTML += `</ul>`;
+            return listHTML;
+        }
+
+        // Numbered Lists (1. 2. 3.)
+        const isNumberedList = lines.every(l => /^\d+\.\s+/.test(l.trim()) || l.trim() === "");
+        if (isNumberedList && lines.length > 0) {
+            let listHTML = `<ol class="doc-numbered-list">`;
+            lines.forEach(l => {
+                const itemText = l.trim().replace(/^\d+\.\s+/, "");
+                if (itemText) {
+                    listHTML += `<li>${formatInlineMarkdown(itemText)}</li>`;
+                }
+            });
+            listHTML += `</ol>`;
+            return listHTML;
+        }
+
+        // Standard Paragraph
+        return `<p class="doc-paragraph">${formatInlineMarkdown(trimmed)}</p>`;
+    });
+
+    return renderedBlocks.join("\n");
+}
+
+function formatInlineMarkdown(text) {
+    if (!text) return "";
+    return text
+        // Bold: **text**
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        // Italic: *text*
+        .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>")
+        // Inline code: `code`
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        // Links: [text](url)
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 // =============================================================================
@@ -410,8 +581,8 @@ function renderTopicArticle(topicId) {
         html += `
             <div class="article-section">
                 <h2 class="article-section-h2">${sec.heading}</h2>
-                <div class="article-body-text">
-                    ${sec.content.replace(/\n\n/g, "<br><br>").replace(/`([^`]+)`/g, "<code>$1</code>")}
+                <div class="article-body-content">
+                    ${renderMarkdown(sec.content)}
                 </div>
             </div>
         `;
@@ -434,10 +605,6 @@ function renderTopicArticle(topicId) {
 
     articleContainer.innerHTML = html;
     window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function escapeHTML(str) {
-    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 function copyCode(btn) {
@@ -589,7 +756,7 @@ function initSearch() {
         searchInput.addEventListener("input", (e) => {
             const query = e.target.value.trim().toLowerCase();
             if (!query) {
-                searchResults.innerHTML = `<p style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">Type keywords like 'AWS', 'GCP', 'Azure', 'Kubernetes', 'SMTP', 'Serializer'...</p>`;
+                searchResults.innerHTML = `<p style="padding: 1rem; color: var(--text-muted); font-size: 0.85rem;">Type keywords like 'AWS', 'Azure', 'GCP', 'Kubernetes', 'SMTP', 'Serializer'...</p>`;
                 return;
             }
 

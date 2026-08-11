@@ -11,7 +11,7 @@
     --surface-hover: #f1f5f9;
     --surface-alt: #f8fafc;
     --text-main: #0f172a;
-    --text-muted: #64748b;
+    --text-muted: #475569;
     --text-light: #94a3b8;
     --border: #e2e8f0;
     --border-strong: #cbd5e1;
@@ -219,7 +219,7 @@ button {
 
 /* Sidebar */
 .sidebar {
-    width: 260px;
+    width: 280px;
     flex-shrink: 0;
     background-color: var(--surface);
     border-right: 1px solid var(--border);
@@ -294,8 +294,8 @@ button {
 /* Content Area */
 .content-area {
     flex: 1;
-    padding: 2rem;
-    max-width: 1180px;
+    padding: 2rem 2.5rem;
+    max-width: 1160px;
     overflow-y: auto;
 }
 
@@ -318,7 +318,7 @@ button {
 }
 
 .section-title {
-    font-size: 1.75rem;
+    font-size: 1.85rem;
     font-weight: 800;
     color: var(--text-main);
     letter-spacing: -0.02em;
@@ -540,7 +540,7 @@ button {
     letter-spacing: 0.5px;
 }
 
-/* Hover Preview Tooltip (Desktop) */
+/* Hover Preview Tooltip */
 .hover-preview-card {
     position: absolute;
     bottom: 105%;
@@ -650,7 +650,7 @@ button {
     gap: 0.5rem;
 }
 
-/* 2. Daily Report Drawer / Modal */
+/* 2. Daily Report Modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -677,7 +677,7 @@ button {
     border-radius: 16px;
     box-shadow: var(--shadow-xl);
     width: 100%;
-    max-width: 800px;
+    max-width: 820px;
     max-height: 90vh;
     overflow-y: auto;
     display: flex;
@@ -918,10 +918,12 @@ button {
     margin-right: 0.5rem;
 }
 
-/* 3. Deep Knowledge Base Article Reader */
+/* ==========================================================================
+   3. Deep Knowledge Base Article Reader & Formatting
+   ========================================================================== */
 .knowledge-layout {
     display: flex;
-    gap: 2rem;
+    gap: 2.25rem;
 }
 
 .knowledge-sidebar {
@@ -974,7 +976,7 @@ button {
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 2.5rem;
+    padding: 2.75rem 3rem;
     box-shadow: var(--shadow-sm);
 }
 
@@ -994,7 +996,7 @@ button {
 }
 
 .article-title {
-    font-size: 2rem;
+    font-size: 2.1rem;
     font-weight: 800;
     color: var(--text-main);
     letter-spacing: -0.02em;
@@ -1019,7 +1021,7 @@ button {
     border-left: 4px solid var(--primary);
     border-radius: 6px;
     padding: 1.25rem 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.25rem;
 }
 
 .article-section {
@@ -1027,25 +1029,115 @@ button {
 }
 
 .article-section-h2 {
-    font-size: 1.35rem;
+    font-size: 1.45rem;
     font-weight: 700;
     color: var(--text-main);
-    margin-bottom: 1rem;
-    padding-bottom: 0.4rem;
+    margin: 1.75rem 0 1rem 0;
+    padding-bottom: 0.45rem;
     border-bottom: 1px solid var(--border);
 }
 
-.article-body-text {
+.article-section-h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 1.35rem 0 0.6rem 0;
+}
+
+.article-section-h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin: 1.1rem 0 0.5rem 0;
+}
+
+.doc-paragraph {
     font-size: 0.95rem;
     line-height: 1.75;
     color: var(--text-main);
-    margin-bottom: 1rem;
+    margin-bottom: 1.15rem;
 }
 
-.article-body-text p {
-    margin-bottom: 1rem;
+/* Bullet & Numbered Lists */
+.doc-bullet-list, .doc-numbered-list {
+    margin: 0.75rem 0 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
+.doc-bullet-list li, .doc-numbered-list li {
+    font-size: 0.94rem;
+    line-height: 1.65;
+    color: var(--text-main);
+}
+
+.doc-bullet-list li strong, .doc-numbered-list li strong {
+    color: var(--text-main);
+}
+
+/* Inline Code Formatting */
+code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background-color: var(--surface-alt);
+    color: var(--primary);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+/* Callout Boxes */
+.callout-box {
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin: 1.5rem 0;
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+}
+
+.callout-box.info {
+    background-color: var(--primary-light);
+    border: 1px solid var(--primary-border);
+    color: var(--text-main);
+}
+
+.callout-box.success {
+    background-color: var(--success-bg);
+    border: 1px solid var(--success-border);
+    color: var(--text-main);
+}
+
+.callout-box.warning {
+    background-color: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    color: var(--text-main);
+}
+
+.callout-box.danger {
+    background-color: var(--danger-bg);
+    border: 1px solid var(--danger-border);
+    color: var(--text-main);
+}
+
+.callout-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.callout-content h5 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.callout-content p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/* Code Blocks */
 .code-block-container {
     background-color: #0d1117;
     border: 1px solid #30363d;
@@ -1102,26 +1194,52 @@ pre.code-content {
     line-height: 1.6;
 }
 
+pre.code-content code {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+}
+
+/* Responsive Tables */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
 .doc-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5rem 0;
     font-size: 0.88rem;
+    background-color: var(--surface);
 }
 
 .doc-table th {
     background-color: var(--surface-alt);
-    border: 1px solid var(--border);
-    padding: 0.75rem 1rem;
+    border-bottom: 2px solid var(--border);
+    padding: 0.8rem 1rem;
     text-align: left;
     font-weight: 700;
     color: var(--text-main);
+    white-space: nowrap;
 }
 
 .doc-table td {
-    border: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
     padding: 0.75rem 1rem;
     color: var(--text-main);
+    line-height: 1.5;
+}
+
+.doc-table tr:last-child td {
+    border-bottom: none;
+}
+
+.doc-table tr:hover td {
+    background-color: var(--surface-hover);
 }
 
 /* 4. Errors & Post-Mortems View */
